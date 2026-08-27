@@ -1,0 +1,135 @@
+// Prisma schema for phase 1
+// Use postgres provider
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String?
+  name      String?
+  phone     String?
+  role      Role     @default(CLIENT)
+  profile   CustomerProfile?
+  appointments Appointment[] @relation("customer_appointments")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+model CustomerProfile {
+  id        String @id @default(cuid())
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id])
+  preferences Json?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  price       Decimal @db.Decimal(10,2)
+  duration    Int     // minutes
+  image       String?
+  active      Boolean @default(true)
+  appointments Appointment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Appointment {
+  id         String   @id @default(cuid())
+  customerId String
+  customer   User     @relation(fields: [customerId], references: [id])
+  serviceId  String
+  service    Service  @relation(fields: [serviceId], references: [id])
+  startAt    DateTime
+  endAt      DateTime
+  status     AppointmentStatus @default(PENDING)
+  price      Decimal  @db.Decimal(10,2)
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([serviceId])
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  AWAITING_PAYMENT
+  PAID
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model Availability {
+  id        String @id @default(cuid())
+  dayOfWeek Int    // 0=Sunday .. 6=Saturday
+  startTime String // "08:00"
+  endTime   String // "18:00"
+  active    Boolean @default(true)
+}
+
+model BlockedTime {
+  id       String @id @default(cuid())
+  startAt  DateTime
+  endAt    DateTime
+  reason   String?
+  createdBy String?
+}
+
+model Payment {
+  id            String @id @default(cuid())
+  appointmentId String?
+  provider      String?
+  method        String?
+  status        String?
+  providerData  Json?
+  createdAt     DateTime @default(now())
+}
+
+model Notification {
+  id            String @id @default(cuid())
+  appointmentId String?
+  userId        String?
+  type          String
+  payload       Json?
+  sentAt        DateTime?
+  status        String?
+  createdAt     DateTime @default(now())
+}
+
+model AuditLog {
+  id        String @id @default(cuid())
+  action    String
+  actorId   String?
+  payload   Json?
+  createdAt DateTime @default(now())
+}
+
+// NOTE: To prevent overlapping appointments for the same resource (single maquiadora),
+// add a raw SQL migration that creates an exclusion constraint using tstzrange(startAt, endAt) and GIST on the appointments table.
+// Example SQL (to include in a migration):
+// CREATE EXTENSION IF NOT EXISTS btree_gist;
+// ALTER TABLE "Appointment" ADD COLUMN "timeslot" tstzrange GENERATED ALWAYS AS (tstzrange("startAt", "endAt")) STORED;
+// CREATE INDEX ON "Appointment" USING GIST ("timeslot");
+// -- Exclude overlapping timeslots (if multi-resources, include resource id)
+// ALTER TABLE "Appointment" ADD CONSTRAINT no_overlapping_appointments EXCLUDE USING GIST ("timeslot" WITH &&);

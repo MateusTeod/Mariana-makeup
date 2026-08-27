@@ -1,0 +1,31 @@
+erDiagram
+    USER ||--o{ CUSTOMERPROFILE : has
+    USER ||--o{ APPOINTMENT : schedules
+    SERVICE ||--o{ APPOINTMENT : provides
+    APPOINTMENT }o--|| PAYMENT : pays
+    APPOINTMENT ||--o{ NOTIFICATION : triggers
+
+    USER {
+      String id
+      String email
+      String name
+    }
+    CUSTOMERPROFILE {
+      String id
+      String userId
+      Json preferences
+    }
+    SERVICE {
+      String id
+      String name
+      Decimal price
+      Int duration
+    }
+    APPOINTMENT {
+      String id
+      String customerId
+      String serviceId
+      DateTime startAt
+      DateTime endAt
+      String status
+    }

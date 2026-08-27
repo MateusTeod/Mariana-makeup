@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Booking API - Mariana Aparicio
+  version: 1.0.0
+servers:
+  - url: /api/v1
+paths:
+  /auth/register:
+    post:
+      summary: Register user
+      requestBody:
+        required: true
+      responses:
+        '201':
+          description: Created
+  /auth/login:
+    post:
+      summary: Login
+      responses:
+        '200':
+          description: OK
+  /auth/refresh:
+    post:
+      summary: Refresh token
+  /services:
+    get:
+      summary: List public services
+    post:
+      summary: Create service (admin)
+  /services/{id}:
+    patch:
+      summary: Update service (admin)
+  /availability:
+    get:
+      summary: Compute available slots for a date and service
+      parameters:
+        - name: serviceId
+          in: query
+          required: true
+        - name: date
+          in: query
+          required: true
+  /appointments:
+    post:
+      summary: Create appointment (guest or authenticated)
+      requestBody:
+        required: true
+    get:
+      summary: List my appointments (auth)
+  /appointments/{id}:
+    get:
+      summary: Get appointment
+    patch:
+      summary: Update (reschedule/cancel)
+  /admin/agenda:
+    get:
+      summary: Admin agenda view
+  /admin/clients:
+    get:
+      summary: List clients
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

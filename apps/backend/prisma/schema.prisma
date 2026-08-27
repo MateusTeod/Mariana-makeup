@@ -1,0 +1,111 @@
+// Prisma schema - SQLite for development, PostgreSQL for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String           @id @default(cuid())
+  email        String           @unique
+  password     String?
+  name         String?
+  phone        String?
+  role         String           @default("CLIENT") // CLIENT | ADMIN
+  profile      CustomerProfile?
+  appointments Appointment[]    @relation("customer_appointments")
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model CustomerProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  preferences String? // JSON string
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  name         String
+  slug         String        @unique
+  description  String?
+  price        Float
+  duration     Int // minutes
+  image        String?
+  active       Boolean       @default(true)
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Appointment {
+  id         String   @id @default(cuid())
+  customerId String
+  customer   User     @relation("customer_appointments", fields: [customerId], references: [id])
+  serviceId  String
+  service    Service  @relation(fields: [serviceId], references: [id])
+  startAt    DateTime
+  endAt      DateTime
+  status     String   @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED | NO_SHOW
+  price      Float
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([serviceId])
+  @@index([startAt])
+}
+
+model Availability {
+  id        String  @id @default(cuid())
+  dayOfWeek Int // 0=Sunday .. 6=Saturday
+  startTime String // "08:00"
+  endTime   String // "18:00"
+  active    Boolean @default(true)
+}
+
+model BlockedTime {
+  id        String   @id @default(cuid())
+  startAt   DateTime
+  endAt     DateTime
+  reason    String?
+  createdBy String?
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  appointmentId String?
+  provider      String?
+  method        String?
+  status        String?
+  providerData  String? // JSON string
+  createdAt     DateTime @default(now())
+}
+
+model Notification {
+  id            String    @id @default(cuid())
+  appointmentId String?
+  userId        String?
+  type          String
+  payload       String? // JSON string
+  sentAt        DateTime?
+  status        String?
+  createdAt     DateTime  @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  actorId   String?
+  payload   String? // JSON string
+  createdAt DateTime @default(now())
+}

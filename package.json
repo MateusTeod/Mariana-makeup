@@ -1,0 +1,20 @@
+{
+    "name":  "maquiadora-monorepo",
+    "private":  true,
+    "version":  "0.1.0",
+    "scripts":  {
+                    "dev:frontend":  "turbo run dev --filter=frontend",
+                    "dev:backend":  "turbo run dev --filter=backend",
+                    "dev":  "concurrently \"pnpm dev:backend\" \"pnpm dev:frontend\"",
+                    "build":  "turbo run build",
+                    "lint":  "turbo run lint",
+                    "format":  "turbo run format"
+                },
+    "devDependencies":  {
+                            "concurrently":  "^7.6.0",
+                            "turbo":  "^1.10.5"
+                        },
+    "dependencies":  {
+                         "pnpm":  "^11.24.0"
+                     }
+}

@@ -1,0 +1,30 @@
+.DS_Store
+node_modules
+.env
+.env.local
+.env.*.local
+/dist
+/build
+/.turbo
+.vscode
+.idea
+/.next
+/.parcel-cache
+/.cache
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+coverage
+coverage/*
+.Dockerfile.swp
+*.db
+*.sqlite
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Mac
+*.local
