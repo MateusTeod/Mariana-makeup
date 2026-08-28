@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AvailabilityService } from '../availability/availability.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { AppointmentStatus, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AppointmentsService {
@@ -192,7 +192,10 @@ export class AppointmentsService {
     return updated;
   }
 
-  async updateStatus(id: string, status: AppointmentStatus) {
+  async updateStatus(
+    id: string,
+    status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW',
+  ) {
     const appointment = await this.findById(id);
 
     return this.prisma.appointment.update({

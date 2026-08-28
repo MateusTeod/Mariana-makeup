@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-// @ts-ignore — Next.js processes global CSS imports at build time.
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -30,7 +29,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Inter:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
       </head>

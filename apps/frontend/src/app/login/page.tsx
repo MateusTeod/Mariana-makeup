@@ -22,16 +22,21 @@ export default function LoginPage() {
         credentials: 'include',
       });
 
+      const responseText = await res.text();
+      const data = responseText ? JSON.parse(responseText) : null;
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Erro ao fazer login');
+        throw new Error(data?.message || `Erro ao fazer login (HTTP ${res.status})`);
       }
 
-      const data = await res.json();
+      if (!data?.accessToken) {
+        throw new Error('Resposta inválida do servidor ao fazer login');
+      }
+
       localStorage.setItem('accessToken', data.accessToken);
       window.location.href = '/minha-agenda';
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {
       setLoading(false);
     }

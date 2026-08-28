@@ -38,16 +38,21 @@ export default function CadastroPage() {
         credentials: 'include',
       });
 
+      const responseText = await res.text();
+      const data = responseText ? JSON.parse(responseText) : null;
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Erro ao criar conta');
+        throw new Error(data?.message || `Erro ao criar conta (HTTP ${res.status})`);
       }
 
-      const data = await res.json();
+      if (!data?.accessToken) {
+        throw new Error('Resposta inválida do servidor ao criar conta');
+      }
+
       localStorage.setItem('accessToken', data.accessToken);
       window.location.href = '/minha-agenda';
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Erro ao criar conta');
     } finally {
       setLoading(false);
     }

@@ -2,7 +2,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AvailabilityService } from '../availability/availability.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { AppointmentStatus } from '@prisma/client';
 export declare class AppointmentsService {
     private prisma;
     private availabilityService;
@@ -180,7 +179,7 @@ export declare class AppointmentsService {
         serviceId: string;
         notes: string | null;
     }>;
-    updateStatus(id: string, status: AppointmentStatus): Promise<{
+    updateStatus(id: string, status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW'): Promise<{
         service: {
             name: string;
             id: string;
