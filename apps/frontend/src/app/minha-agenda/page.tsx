@@ -125,7 +125,8 @@ export default function MinhaAgendaPage() {
       </nav>
 
       {/* Main Content */}
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 24px' }}>
+
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 24px', boxShadow: 'var(--shadow-sm)', backgroundColor: 'white', borderRadius: '12px', marginTop: '32px' }}>
         <h1 style={{ marginBottom: '8px', fontSize: '2rem' }}>Meus Agendamentos</h1>
         <p style={{ color: 'var(--color-text-secondary)', marginBottom: '32px' }}>
           Visualize e gerencie seus agendamentos

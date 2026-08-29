@@ -114,8 +114,13 @@ export class AvailabilityService {
           current < new Date(appt.endAt) && slotEnd > new Date(appt.startAt),
       );
 
+      // Format time as HH:mm
+      const hours = String(current.getHours()).padStart(2, '0');
+      const minutes = String(current.getMinutes()).padStart(2, '0');
+      const timeString = `${hours}:${minutes}`;
+
       slots.push({
-        time: current.toISOString(),
+        time: timeString,
         available: !isOccupied,
       });
 

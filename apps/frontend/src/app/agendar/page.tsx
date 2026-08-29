@@ -95,7 +95,7 @@ export default function AgendarPage() {
       const token = localStorage.getItem('accessToken');
       const appointmentData = {
         serviceId: selectedService,
-        startAt: `${selectedDate}T${selectedTime}:00`,
+        startAt: `${selectedDate}T${selectedTime}`,
         name: formData.name,
         email: formData.email,
         phone: formData.phone,

@@ -85,8 +85,11 @@ let AvailabilityService = class AvailabilityService {
                 continue;
             }
             const isOccupied = existingAppointments.some((appt) => current < new Date(appt.endAt) && slotEnd > new Date(appt.startAt));
+            const hours = String(current.getHours()).padStart(2, '0');
+            const minutes = String(current.getMinutes()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}`;
             slots.push({
-                time: current.toISOString(),
+                time: timeString,
                 available: !isOccupied,
             });
             current.setMinutes(current.getMinutes() + 30);

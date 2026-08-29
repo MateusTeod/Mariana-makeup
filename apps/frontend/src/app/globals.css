@@ -136,7 +136,7 @@ input, textarea, select {
 
 .btn--primary {
   background-color: var(--color-primary);
-  color: var(--color-text);
+  color: white;
 }
 
 .btn--primary:hover {
@@ -144,6 +144,17 @@ input, textarea, select {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
   text-decoration: none;
+}
+
+.btn--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--lg {
+  padding: 14px 32px;
+  font-size: 16px;
 }
 
 .btn--outline {

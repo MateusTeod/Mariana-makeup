@@ -86,7 +86,7 @@ export default function HomePage() {
                   </div>
                   <Link
                     href="/agendar"
-                    className={`${styles.btn} ${styles['btn--outline']} ${styles['btn--sm']}`}
+                    className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--sm']}`}
                     style={{ marginTop: '16px', width: '100%' }}
                   >
                     Agendar
