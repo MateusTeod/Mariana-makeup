@@ -1,5 +1,5 @@
 import Link from 'next/link';
-
+import { Header } from './Header';
 import styles from './page.module.css';
 
 
@@ -7,24 +7,7 @@ export default function HomePage() {
   return (
     <main>
       {/* Navigation */}
-      <nav className={styles.nav}>
-        <div className={styles.nav__container}>
-          <Link href="/" className={styles.nav__logo}>
-            Mariana Aparicio
-          </Link>
-          <div className={styles.nav__links}>
-            <Link href="/servicos" className={styles.nav__link}>
-              Servicos
-            </Link>
-            <Link href="/login" className={styles.nav__link}>
-              Entrar
-            </Link>
-            <Link href="/agendar" className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--sm']}`}>
-              Agendar Horario
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Hero Section */}
       <section className={styles.hero}>
@@ -38,11 +21,11 @@ export default function HomePage() {
               de alta qualidade.
             </p>
             <div className={styles.hero__actions}>
-              <Link href="/agendar" className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--lg']}`}>
+              <Link href="/agendar" className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--sm']} ${styles['btn--outline']}`}>
                 Agendar Horario
               </Link>
-              <Link href="/servicos" className={`${styles.btn} ${styles['btn--outline']} ${styles['btn--lg']}`}>
-                Ver Servicos
+              <Link href="/servicos" className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--sm']} ${styles['btn--outline']}`}>
+                Ver Serviços
               </Link>
             </div>
           </div>

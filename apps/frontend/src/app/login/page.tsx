@@ -1,13 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/lib/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated, isLoading: authLoading } = useAuth();
+  const router = useRouter();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.push('/minha-agenda');
+    }
+  }, [isAuthenticated, authLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,32 +26,26 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/v1/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include',
-      });
-
-      const responseText = await res.text();
-      const data = responseText ? JSON.parse(responseText) : null;
-
-      if (!res.ok) {
-        throw new Error(data?.message || `Erro ao fazer login (HTTP ${res.status})`);
-      }
-
-      if (!data?.accessToken) {
-        throw new Error('Resposta inválida do servidor ao fazer login');
-      }
-
-      localStorage.setItem('accessToken', data.accessToken);
-      window.location.href = '/minha-agenda';
+      await login(email, password);
+      router.push('/minha-agenda');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <main className="auth">
+        <div className="auth__container">
+          <div className="auth__card card">
+            <p style={{ textAlign: 'center' }}>Carregando...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="auth">

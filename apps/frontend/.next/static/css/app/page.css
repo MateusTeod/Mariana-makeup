@@ -202,6 +202,7 @@
 }
 
 .page_service-card__title__XEkr1 {
+  font-family: var(--font-body);
   font-size: 23px;
   margin-bottom: 8px;
 }
@@ -350,7 +351,7 @@
 }
 
 .page_service-card__Z0JTn::before {
-  content: 'MARINA';
+  content: 'MARIANA';
   position: absolute;
   right: 18px;
   top: 18px;
@@ -358,6 +359,95 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
+}
+
+/* User Navigation */
+.page_nav__user__xNM_5 {
+  position: relative;
+}
+
+.page_nav__user_button__JZ0TE {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  font-weight: 500;
+  padding: 8px;
+  transition: color var(--transition-fast);
+}
+
+.page_nav__user_button__JZ0TE:hover {
+  color: var(--color-primary);
+}
+
+.page_nav__user_avatar__M8rnd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: white;
+  font-weight: 600;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.page_nav__dropdown__Z51uM {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  min-width: 220px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.page_nav__dropdown_header__tKnfn {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.page_nav__dropdown_divider__VfIa0 {
+  height: 1px;
+  background: var(--color-border);
+}
+
+.page_nav__dropdown_item__U6RFq {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 13px;
+  transition: background-color var(--transition-fast);
+}
+
+.page_nav__dropdown_item__U6RFq:hover {
+  background-color: var(--color-bg);
+}
+
+.page_nav__dropdown_item__U6RFq:active {
+  background-color: rgba(216, 154, 171, 0.1);
+}
+
+.page_btn--sm__DlHV_ {
+  padding: 10px 20px;
+  font-size: 12px;
 }
 
 @media (max-width: 640px) {

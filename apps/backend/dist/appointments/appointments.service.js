@@ -115,7 +115,7 @@ let AppointmentsService = class AppointmentsService {
             orderBy: { startAt: 'desc' },
         });
     }
-    async findById(id) {
+    async findById(id, userId) {
         const appointment = await this.prisma.appointment.findUnique({
             where: { id },
             include: {
@@ -127,6 +127,9 @@ let AppointmentsService = class AppointmentsService {
         });
         if (!appointment) {
             throw new common_1.NotFoundException('Appointment not found');
+        }
+        if (userId && appointment.customerId !== userId) {
+            throw new common_1.ForbiddenException('You can only view your own appointments');
         }
         return appointment;
     }

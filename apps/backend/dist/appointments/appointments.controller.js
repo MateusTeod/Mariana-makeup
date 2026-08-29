@@ -36,8 +36,8 @@ let AppointmentsController = class AppointmentsController {
     findMyHistory(req) {
         return this.appointmentsService.findHistory(req.user.id);
     }
-    findById(id) {
-        return this.appointmentsService.findById(id);
+    findById(id, req) {
+        return this.appointmentsService.findById(id, req.user.id);
     }
     cancel(id, req) {
         return this.appointmentsService.cancel(id, req.user.id);
@@ -83,8 +83,9 @@ __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], AppointmentsController.prototype, "findById", null);
 __decorate([

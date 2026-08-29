@@ -20,6 +20,8 @@ export class AppointmentsController {
 
   @Post()
   create(@Body() dto: CreateAppointmentDto, @Request() req: any) {
+    // Allow both authenticated users and guest bookings
+    // If authenticated, userId is passed; if guest, userId is undefined
     const userId = req.user?.id;
     return this.appointmentsService.create(dto, userId);
   }
@@ -44,13 +46,15 @@ export class AppointmentsController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  findById(@Param('id') id: string) {
-    return this.appointmentsService.findById(id);
+  findById(@Param('id') id: string, @Request() req: any) {
+    // SECURITY: Validate that appointment belongs to logged-in user
+    return this.appointmentsService.findById(id, req.user.id);
   }
 
   @Patch(':id/cancel')
   @UseGuards(JwtAuthGuard)
   cancel(@Param('id') id: string, @Request() req: any) {
+    // Already validates ownership in service
     return this.appointmentsService.cancel(id, req.user.id);
   }
 

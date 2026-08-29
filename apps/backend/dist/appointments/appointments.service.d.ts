@@ -113,7 +113,7 @@ export declare class AppointmentsService {
         serviceId: string;
         notes: string | null;
     })[]>;
-    findById(id: string): Promise<{
+    findById(id: string, userId?: string): Promise<{
         service: {
             name: string;
             id: string;

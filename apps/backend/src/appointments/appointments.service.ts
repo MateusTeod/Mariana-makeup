@@ -142,7 +142,7 @@ export class AppointmentsService {
     });
   }
 
-  async findById(id: string) {
+  async findById(id: string, userId?: string) {
     const appointment = await this.prisma.appointment.findUnique({
       where: { id },
       include: {
@@ -155,6 +155,11 @@ export class AppointmentsService {
 
     if (!appointment) {
       throw new NotFoundException('Appointment not found');
+    }
+
+    // SECURITY: If userId is provided, verify ownership
+    if (userId && appointment.customerId !== userId) {
+      throw new ForbiddenException('You can only view your own appointments');
     }
 
     return appointment;

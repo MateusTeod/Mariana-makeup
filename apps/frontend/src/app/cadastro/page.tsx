@@ -1,56 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/lib/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function CadastroPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { register, isAuthenticated, isLoading: authLoading } = useAuth();
+  const router = useRouter();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.push('/minha-agenda');
+    }
+  }, [isAuthenticated, authLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('As senhas nao coincidem');
+    // Validations
+    if (password !== confirmPassword) {
+      setError('As senhas não correspondem');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres');
       return;
     }
 
     setLoading(true);
 
     try {
-      const res = await fetch('/api/v1/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          password: formData.password,
-        }),
-        credentials: 'include',
-      });
-
-      const responseText = await res.text();
-      const data = responseText ? JSON.parse(responseText) : null;
-
-      if (!res.ok) {
-        throw new Error(data?.message || `Erro ao criar conta (HTTP ${res.status})`);
-      }
-
-      if (!data?.accessToken) {
-        throw new Error('Resposta inválida do servidor ao criar conta');
-      }
-
-      localStorage.setItem('accessToken', data.accessToken);
-      window.location.href = '/minha-agenda';
+      await register(name, email, password, phone);
+      router.push('/minha-agenda');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Erro ao criar conta');
     } finally {
@@ -58,79 +50,93 @@ export default function CadastroPage() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <main className="auth">
+        <div className="auth__container">
+          <div className="auth__card card">
+            <p style={{ textAlign: 'center' }}>Carregando...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="auth">
       <div className="auth__container">
         <div className="auth__card card">
           <h1 className="auth__title">Criar Conta</h1>
           <p className="auth__subtitle">
-            Crie sua conta para facilitar seus agendamentos
+            Crie sua conta para começar a agendar seus serviços
           </p>
 
           {error && <div className="auth__error">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Nome completo</label>
+              <label className="form-label">Nome Completo</label>
               <input
                 type="text"
                 className="form-input"
-                placeholder="Seu nome"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Seu nome completo"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
+
             <div className="form-group">
               <label className="form-label">E-mail</label>
               <input
                 type="email"
                 className="form-input"
                 placeholder="seu@email.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
+
             <div className="form-group">
-              <label className="form-label">WhatsApp</label>
+              <label className="form-label">WhatsApp (opcional)</label>
               <input
                 type="tel"
                 className="form-input"
                 placeholder="(11) 99999-9999"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
               />
             </div>
+
             <div className="form-group">
               <label className="form-label">Senha</label>
               <input
                 type="password"
                 className="form-input"
-                placeholder="Minimo 8 caracteres"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="Mínimo 6 caracteres"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={8}
               />
             </div>
+
             <div className="form-group">
-              <label className="form-label">Confirmar senha</label>
+              <label className="form-label">Confirmar Senha</label>
               <input
                 type="password"
                 className="form-input"
-                placeholder="Repita a senha"
-                value={formData.confirmPassword}
-                onChange={(e) =>
-                  setFormData({ ...formData, confirmPassword: e.target.value })
-                }
+                placeholder="Confirme sua senha"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
             </div>
+
             <button
               type="submit"
               className="btn btn--primary"
-              style={{ width: '100%', marginTop: '8px' }}
+              style={{ width: '100%', marginTop: '24px' }}
               disabled={loading}
             >
               {loading ? 'Criando conta...' : 'Criar Conta'}
@@ -138,8 +144,17 @@ export default function CadastroPage() {
           </form>
 
           <p className="auth__register">
-            Ja tem conta?{' '}
+            Já tem conta?{' '}
             <Link href="/login">Entrar</Link>
+          </p>
+
+          <p style={{
+            textAlign: 'center',
+            fontSize: '12px',
+            color: 'var(--color-text-secondary)',
+            marginTop: '24px',
+          }}>
+            Ao criar uma conta, você concorda com nossos Termos de Serviço e Política de Privacidade.
           </p>
         </div>
       </div>

@@ -139,13 +139,14 @@ input, textarea, select {
 
 .btn--primary {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-text);
 }
 
 .btn--primary:hover {
   background-color: var(--color-primary-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
+  text-decoration: none;
 }
 
 .btn--outline {
@@ -208,7 +209,7 @@ input, textarea, select {
 
 .nav__logo {
   font-family: var(--font-heading);
-  font-size: 24px;
+  font-size: 50px;
   color: var(--color-text);
 }
 
