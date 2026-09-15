@@ -40,13 +40,14 @@ export class AuthService {
       },
     });
 
-    const tokens = await this.generateTokens(user.id, user.email, user.role);
+    const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
 
     return {
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
+        phone: user.phone,
         role: user.role,
       },
       ...tokens,
@@ -68,13 +69,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const tokens = await this.generateTokens(user.id, user.email, user.role);
+    const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
 
     return {
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
+        phone: user.phone,
         role: user.role,
       },
       ...tokens,
@@ -95,15 +97,30 @@ export class AuthService {
         throw new UnauthorizedException();
       }
 
-      const tokens = await this.generateTokens(user.id, user.email, user.role);
-      return tokens;
+      const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
+      return {
+        ...tokens,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          phone: user.phone,
+          role: user.role,
+        },
+      };
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
 
-  private async generateTokens(userId: string, email: string, role: string) {
-    const payload = { sub: userId, email, role };
+  private async generateTokens(
+    userId: string,
+    email: string,
+    role: string,
+    name?: string | null,
+    phone?: string | null,
+  ) {
+    const payload = { sub: userId, email, role, name, phone };
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {

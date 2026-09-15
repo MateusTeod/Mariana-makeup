@@ -7,6 +7,7 @@ export interface User {
   email: string;
   name: string;
   role: 'CLIENT' | 'ADMIN';
+  phone?: string | null;
 }
 
 interface AuthContextType {
@@ -47,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             email: payload.email,
             name: payload.name || 'Usuário',
             role: payload.role || 'CLIENT',
+            phone: payload.phone || null,
           });
         }
       } catch (error) {
@@ -85,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: data.user.email,
       name: data.user.name || 'Usuário',
       role: data.user.role || 'CLIENT',
+      phone: data.user.phone || null,
     });
   };
 
@@ -113,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: data.user.email,
       name: data.user.name || name,
       role: data.user.role || 'CLIENT',
+      phone: data.user.phone || phone || null,
     });
   };
 
@@ -152,6 +156,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: payload.email,
           name: payload.name || 'Usuário',
           role: payload.role || 'CLIENT',
+          phone: payload.phone || null,
         });
       }
     } catch (error) {

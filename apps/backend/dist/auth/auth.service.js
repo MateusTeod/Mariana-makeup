@@ -43,12 +43,13 @@ let AuthService = class AuthService {
                 role: 'CLIENT',
             },
         });
-        const tokens = await this.generateTokens(user.id, user.email, user.role);
+        const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
         return {
             user: {
                 id: user.id,
                 email: user.email,
                 name: user.name,
+                phone: user.phone,
                 role: user.role,
             },
             ...tokens,
@@ -65,12 +66,13 @@ let AuthService = class AuthService {
         if (!isPasswordValid) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
-        const tokens = await this.generateTokens(user.id, user.email, user.role);
+        const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
         return {
             user: {
                 id: user.id,
                 email: user.email,
                 name: user.name,
+                phone: user.phone,
                 role: user.role,
             },
             ...tokens,
@@ -87,15 +89,24 @@ let AuthService = class AuthService {
             if (!user) {
                 throw new common_1.UnauthorizedException();
             }
-            const tokens = await this.generateTokens(user.id, user.email, user.role);
-            return tokens;
+            const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
+            return {
+                ...tokens,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    phone: user.phone,
+                    role: user.role,
+                },
+            };
         }
         catch {
             throw new common_1.UnauthorizedException('Invalid refresh token');
         }
     }
-    async generateTokens(userId, email, role) {
-        const payload = { sub: userId, email, role };
+    async generateTokens(userId, email, role, name, phone) {
+        const payload = { sub: userId, email, role, name, phone };
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload, {
                 secret: this.configService.get('JWT_SECRET', 'default-secret'),

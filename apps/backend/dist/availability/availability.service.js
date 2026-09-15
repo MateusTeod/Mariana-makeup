@@ -23,7 +23,8 @@ let AvailabilityService = class AvailabilityService {
         if (!service || !service.active) {
             return [];
         }
-        const requestedDate = new Date(date);
+        const [year, month, day] = date.split('T')[0].split('-').map(Number);
+        const requestedDate = new Date(year, month - 1, day);
         const dayOfWeek = requestedDate.getDay();
         const availability = await this.prisma.availability.findFirst({
             where: {
@@ -34,19 +35,17 @@ let AvailabilityService = class AvailabilityService {
         if (!availability) {
             return [];
         }
+        const dayStart = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const dayEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
         const isBlocked = await this.prisma.blockedTime.findFirst({
             where: {
-                startAt: { lte: requestedDate },
-                endAt: { gte: requestedDate },
+                startAt: { lte: dayEnd },
+                endAt: { gte: dayStart },
             },
         });
         if (isBlocked) {
             return [];
         }
-        const dayStart = new Date(requestedDate);
-        dayStart.setHours(0, 0, 0, 0);
-        const dayEnd = new Date(requestedDate);
-        dayEnd.setHours(23, 59, 59, 999);
         const existingAppointments = await this.prisma.appointment.findMany({
             where: {
                 startAt: { gte: dayStart },

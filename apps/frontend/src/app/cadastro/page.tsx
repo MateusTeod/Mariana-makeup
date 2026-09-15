@@ -27,14 +27,22 @@ export default function CadastroPage() {
     e.preventDefault();
     setError('');
 
-    // Validations
     if (password !== confirmPassword) {
       setError('As senhas não correspondem');
       return;
     }
 
-    if (password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres');
+    if (password.length < 8) {
+      setError('A senha deve ter pelo menos 8 caracteres');
+      return;
+    }
+
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumberOrSpecial = /[\d\W]/.test(password);
+
+    if (!hasUpper || !hasLower || !hasNumberOrSpecial) {
+      setError('A senha deve conter letras maiúsculas, minúsculas e pelo menos um número ou símbolo');
       return;
     }
 
@@ -111,14 +119,14 @@ export default function CadastroPage() {
 
             <div className="form-group">
               <label className="form-label">Senha</label>
-              <input
-                type="password"
-                className="form-input"
-                placeholder="Mínimo 6 caracteres"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="Mínimo 8 caracteres (A-z, 0-9)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
             </div>
 
             <div className="form-group">

@@ -578,3 +578,51 @@ input, textarea, select {
    Tablet: 768px
    Desktop: 1024px - 1440px
 */
+
+/* WhatsApp Floating Button */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  background-color: #25D366;
+  color: white;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4), var(--shadow-lg);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.whatsapp-float:hover {
+  background-color: #20BA5A;
+  color: white;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 26px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-float__icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .whatsapp-float {
+    bottom: 20px;
+    right: 20px;
+    padding: 12px;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    justify-content: center;
+  }
+  .whatsapp-float__text {
+    display: none;
+  }
+}
+

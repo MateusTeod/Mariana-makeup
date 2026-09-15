@@ -82,6 +82,7 @@ async function main() {
   console.log('Services created:', services.length);
 
   // Create availability (Mon-Sat, 8:00-18:00)
+  await prisma.availability.deleteMany({});
   const availabilityData = [
     { dayOfWeek: 1, startTime: '08:00', endTime: '18:00', active: true }, // Monday
     { dayOfWeek: 2, startTime: '08:00', endTime: '18:00', active: true }, // Tuesday

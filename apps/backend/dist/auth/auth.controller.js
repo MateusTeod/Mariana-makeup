@@ -40,8 +40,12 @@ let AuthController = class AuthController {
             accessToken: result.accessToken,
         };
     }
-    async refresh(dto, res) {
-        const result = await this.authService.refresh(dto.refreshToken);
+    async refresh(req, res, dto) {
+        const token = req.cookies?.refreshToken || dto?.refreshToken;
+        if (!token) {
+            throw new common_1.UnauthorizedException('Refresh token is required');
+        }
+        const result = await this.authService.refresh(token);
         this.setRefreshCookie(res, result.refreshToken);
         return {
             accessToken: result.accessToken,
@@ -81,10 +85,11 @@ __decorate([
 ], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.Post)('refresh'),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [refresh_dto_1.RefreshDto, Object]),
+    __metadata("design:paramtypes", [Object, Object, refresh_dto_1.RefreshDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refresh", null);
 __decorate([

@@ -17,8 +17,8 @@ export class RegisterDto {
 
   @IsOptional()
   @IsString()
-  @Matches(/^\+?[1-9]\d{1,14}$/, {
-    message: 'Phone must be a valid international phone number',
+  @Matches(/^[+]?[0-9\s\-()]{8,20}$/, {
+    message: 'Telefone deve ser válido (ex: 11 99999-9999)',
   })
   phone?: string;
 }

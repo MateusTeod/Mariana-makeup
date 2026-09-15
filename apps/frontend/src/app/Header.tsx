@@ -75,23 +75,16 @@ export function Header() {
               <Link href="/login" className={styles.nav__link}>
                 Entrar
               </Link>
-              <Link
-                href="/cadastro"
-                className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--sm']} ${styles['btn--outline']} `}>
-              
-                Criar Conta
-              </Link>
             </>
           )}
 
-          {!isLoading && isAuthenticated && (
-            <Link
-              href="/agendar"
-              className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--sm']}`}
-            >
-              Agendar
-            </Link>
-          )}
+          <Link
+            href="/agendar"
+            className={`${styles.btn} ${styles['btn--primary']} ${styles['btn--sm']}`}
+            style={{ fontWeight: 600 }}
+          >
+            Agendar Horário
+          </Link>
         </div>
       </div>
     </nav>

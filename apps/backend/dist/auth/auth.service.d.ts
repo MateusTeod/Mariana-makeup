@@ -15,6 +15,7 @@ export declare class AuthService {
             id: string;
             email: string;
             name: string | null;
+            phone: string | null;
             role: string;
         };
     }>;
@@ -25,10 +26,18 @@ export declare class AuthService {
             id: string;
             email: string;
             name: string | null;
+            phone: string | null;
             role: string;
         };
     }>;
     refresh(refreshToken: string): Promise<{
+        user: {
+            id: string;
+            email: string;
+            name: string | null;
+            phone: string | null;
+            role: string;
+        };
         accessToken: string;
         refreshToken: string;
     }>;

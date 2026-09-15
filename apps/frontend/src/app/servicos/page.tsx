@@ -214,29 +214,23 @@ export default function ServicosPage() {
                   </div>
 
                   {/* CTA Button */}
-                  <button
+                  <span
                     style={{
+                      display: 'block',
+                      textAlign: 'center',
                       marginTop: '16px',
                       padding: '12px 16px',
                       backgroundColor: 'var(--color-primary)',
                       color: 'white',
-                      border: 'none',
                       borderRadius: '8px',
-                      cursor: 'pointer',
                       fontSize: '14px',
                       fontWeight: '600',
                       width: '100%',
                       transition: 'all var(--transition-base)',
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.opacity = '0.9';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.opacity = '1';
-                    }}
                   >
-                    Agendar Agora
-                  </button>
+                    Agendar este Serviço
+                  </span>
                 </div>
               </Link>
             ))}

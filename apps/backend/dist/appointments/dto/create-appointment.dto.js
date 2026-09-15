@@ -32,8 +32,8 @@ __decorate([
 ], CreateAppointmentDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/^\+?[1-9]\d{1,14}$/, {
-        message: 'Phone must be a valid international phone number',
+    (0, class_validator_1.Matches)(/^[+]?[0-9\s\-()]{8,20}$/, {
+        message: 'Telefone deve ser válido (ex: 11 99999-9999)',
     }),
     __metadata("design:type", String)
 ], CreateAppointmentDto.prototype, "phone", void 0);

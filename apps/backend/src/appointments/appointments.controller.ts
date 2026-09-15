@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard, OptionalJwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 
@@ -19,6 +19,7 @@ export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
   @Post()
+  @UseGuards(OptionalJwtAuthGuard)
   create(@Body() dto: CreateAppointmentDto, @Request() req: any) {
     // Allow both authenticated users and guest bookings
     // If authenticated, userId is passed; if guest, userId is undefined

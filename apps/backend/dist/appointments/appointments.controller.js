@@ -49,6 +49,7 @@ let AppointmentsController = class AppointmentsController {
 exports.AppointmentsController = AppointmentsController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.OptionalJwtAuthGuard),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),

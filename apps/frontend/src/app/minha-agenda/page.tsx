@@ -28,6 +28,8 @@ export default function MinhaAgendaPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
+  const [actionSuccess, setActionSuccess] = useState<string>('');
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'upcoming' | 'history'>('upcoming');
 
   // Redirect if not logged in
@@ -75,6 +77,43 @@ export default function MinhaAgendaPage() {
 
     fetchAppointments();
   }, [isAuthenticated, authLoading, activeTab]);
+
+  const handleCancelAppointment = async (id: string) => {
+    if (!confirm('Deseja realmente cancelar este agendamento?')) {
+      return;
+    }
+    setCancellingId(id);
+    setError('');
+    setActionSuccess('');
+
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) throw new Error('Sessão expirada. Faça login novamente.');
+
+      const response = await fetch(`${API_BASE}/appointments/${id}/cancel`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.message || 'Falha ao cancelar o agendamento');
+      }
+
+      setActionSuccess('Agendamento cancelado com sucesso!');
+      setAppointments((prev) =>
+        prev.map((apt) => (apt.id === id ? { ...apt, status: 'CANCELLED' } : apt))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao cancelar');
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   if (authLoading) {
     return (
@@ -174,6 +213,20 @@ export default function MinhaAgendaPage() {
             📜 Histórico
           </button>
         </div>
+
+        {/* Success Message */}
+        {actionSuccess && (
+          <div style={{
+            backgroundColor: '#d4edda',
+            color: '#155724',
+            padding: '16px',
+            borderRadius: '8px',
+            marginBottom: '24px',
+            fontWeight: '500',
+          }}>
+            ✅ {actionSuccess}
+          </div>
+        )}
 
         {/* Error Message */}
         {error && (
@@ -350,24 +403,22 @@ export default function MinhaAgendaPage() {
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                     {apt.status === 'CONFIRMED' && startDate > new Date() && (
                       <button
-                        onClick={() => {
-                          if (confirm('Deseja cancelar este agendamento?')) {
-                            // Handle cancellation
-                          }
-                        }}
+                        onClick={() => handleCancelAppointment(apt.id)}
+                        disabled={cancellingId === apt.id}
                         style={{
                           padding: '8px 16px',
                           backgroundColor: 'var(--color-danger)',
                           color: 'white',
                           border: 'none',
                           borderRadius: '6px',
-                          cursor: 'pointer',
+                          cursor: cancellingId === apt.id ? 'not-allowed' : 'pointer',
                           fontSize: '12px',
                           fontWeight: '600',
+                          opacity: cancellingId === apt.id ? 0.6 : 1,
                           transition: 'all var(--transition-base)',
                         }}
                       >
-                        Cancelar
+                        {cancellingId === apt.id ? 'Cancelando...' : 'Cancelar Agendamento'}
                       </button>
                     )}
                   </div>

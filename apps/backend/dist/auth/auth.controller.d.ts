@@ -2,7 +2,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 export declare class AuthController {
     private readonly authService;
@@ -13,6 +13,7 @@ export declare class AuthController {
             id: string;
             email: string;
             name: string | null;
+            phone: string | null;
             role: string;
         };
         accessToken: string;
@@ -22,11 +23,12 @@ export declare class AuthController {
             id: string;
             email: string;
             name: string | null;
+            phone: string | null;
             role: string;
         };
         accessToken: string;
     }>;
-    refresh(dto: RefreshDto, res: Response): Promise<{
+    refresh(req: Request, res: Response, dto?: RefreshDto): Promise<{
         accessToken: string;
     }>;
     logout(res: Response): Promise<{

@@ -1,15 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@/lib/AuthContext';
 
 type Step = 'service' | 'datetime' | 'info' | 'confirm';
-type Service = { id: string; name: string; price: number; duration: number; description?: string };
+type Service = { id: string; name: string; slug?: string; price: number; duration: number; description?: string };
 type TimeSlot = { time: string; available: boolean };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001/api/v1';
 
-export default function AgendarPage() {
+function AgendarContent() {
+  const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const queryServiceId = searchParams.get('serviceId');
+
   const [step, setStep] = useState<Step>('service');
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -48,6 +54,29 @@ export default function AgendarPage() {
     };
     fetchServices();
   }, []);
+
+  // Pre-fill user data if authenticated
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: prev.name || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+      }));
+    }
+  }, [user]);
+
+  // Pre-select service from URL query params
+  useEffect(() => {
+    if (queryServiceId && services.length > 0) {
+      const match = services.find((s) => s.id === queryServiceId || s.slug === queryServiceId);
+      if (match) {
+        setSelectedService(match.id);
+        setStep('datetime');
+      }
+    }
+  }, [queryServiceId, services]);
 
   // Fetch available slots when date or service changes
   useEffect(() => {
@@ -93,13 +122,17 @@ export default function AgendarPage() {
     setError('');
     try {
       const token = localStorage.getItem('accessToken');
+      const rawPhone = formData.phone.trim();
+      const phoneDigits = rawPhone.replace(/\D/g, '');
+      const formattedPhone = phoneDigits.length >= 10 && !rawPhone.startsWith('+') ? `+55${phoneDigits}` : rawPhone;
+
       const appointmentData = {
         serviceId: selectedService,
         startAt: `${selectedDate}T${selectedTime}`,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        notes: formData.notes,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formattedPhone,
+        notes: formData.notes.trim(),
       };
 
       const response = await fetch(`${API_BASE}/appointments`, {
@@ -115,10 +148,11 @@ export default function AgendarPage() {
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          responseData?.message || 
-          `Erro ao confirmar agendamento (${response.status})`
-        );
+        let msg = 'Erro ao confirmar agendamento';
+        if (responseData?.message) {
+          msg = Array.isArray(responseData.message) ? responseData.message.join(' | ') : responseData.message;
+        }
+        throw new Error(msg);
       }
 
       setSuccess(true);
@@ -400,5 +434,26 @@ export default function AgendarPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function AgendarPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="booking">
+          <nav className="nav">
+            <div className="nav__container">
+              <Link href="/" className="nav__logo">Mariana Aparicio</Link>
+            </div>
+          </nav>
+          <div className="booking__container" style={{ textAlign: 'center', padding: '48px 24px' }}>
+            <p>Carregando agendamento...</p>
+          </div>
+        </main>
+      }
+    >
+      <AgendarContent />
+    </Suspense>
   );
 }

@@ -24,8 +24,23 @@ async function bootstrap() {
         max: 100,
         message: 'Too many requests, please try again later.',
     }));
+    const configuredOrigin = configService.get('FRONTEND_URL', 'http://localhost:3000');
+    const allowedOrigins = [
+        configuredOrigin,
+        'http://localhost:3000',
+        'http://localhost:3002',
+        'http://localhost:3003',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:3002',
+        'http://127.0.0.1:3003',
+    ];
     app.enableCors({
-        origin: [frontendUrl],
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin) || /^http:\/\/(localhost|127\.0\.0\.1):[0-9]+$/.test(origin)) {
+                return callback(null, true);
+            }
+            return callback(new Error(`Origin ${origin} not allowed by CORS`));
+        },
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],

@@ -14,7 +14,9 @@ export class AvailabilityService {
       return [];
     }
 
-    const requestedDate = new Date(date);
+    // Parse date parts safely to avoid UTC midnight shifting backwards in UTC-3
+    const [year, month, day] = date.split('T')[0].split('-').map(Number);
+    const requestedDate = new Date(year, month - 1, day);
     const dayOfWeek = requestedDate.getDay();
 
     // Get working hours for this day
@@ -29,23 +31,20 @@ export class AvailabilityService {
       return []; // Day off
     }
 
+    const dayStart = new Date(year, month - 1, day, 0, 0, 0, 0);
+    const dayEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
+
     // Check if date is blocked
     const isBlocked = await this.prisma.blockedTime.findFirst({
       where: {
-        startAt: { lte: requestedDate },
-        endAt: { gte: requestedDate },
+        startAt: { lte: dayEnd },
+        endAt: { gte: dayStart },
       },
     });
 
     if (isBlocked) {
       return [];
     }
-
-    // Get existing appointments for the date
-    const dayStart = new Date(requestedDate);
-    dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(requestedDate);
-    dayEnd.setHours(23, 59, 59, 999);
 
     const existingAppointments = await this.prisma.appointment.findMany({
       where: {
