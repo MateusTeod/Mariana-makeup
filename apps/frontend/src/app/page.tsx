@@ -391,16 +391,7 @@ export default function HomePage() {
             >
               Reservar Meu Horário Agora
             </Link>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${styles.btn} ${styles['btn--whatsapp']}`}
-              style={{ padding: '14px 28px' }}
-            >
-              <span className={styles.whatsapp_button_icon}><WhatsAppIcon /></span>
-              Falar pelo WhatsApp
-            </a>
+            
           </div>
         </div>
       </section>
