@@ -3,9 +3,9 @@
     "private":  true,
     "version":  "0.1.0",
     "scripts":  {
-                    "dev:frontend":  "turbo run dev --filter=frontend",
-                    "dev:backend":  "turbo run dev --filter=backend",
-                    "dev":  "concurrently \"pnpm dev:backend\" \"pnpm dev:frontend\"",
+        "dev": "concurrently --kill-others --prefix \"[{name}]\" --names \"backend,frontend\" --prefix-colors \"blue.bold,magenta.bold\" \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
+        "dev:frontend": "pnpm --filter frontend dev",
+        "dev:backend": "pnpm --filter backend dev",
                     "build":  "turbo run build",
                     "lint":  "turbo run lint",
                     "format":  "turbo run format"

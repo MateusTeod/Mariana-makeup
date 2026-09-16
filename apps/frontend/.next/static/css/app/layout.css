@@ -614,8 +614,16 @@ input, textarea, select {
 }
 
 .whatsapp-float__icon {
-  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
+}
+
+.whatsapp-float__icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 @media (max-width: 640px) {

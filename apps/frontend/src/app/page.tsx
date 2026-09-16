@@ -8,13 +8,91 @@ const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
   'Olá, Mariana! Gostaria de tirar uma dúvida sobre seus serviços de maquiagem.'
 )}`;
 
+function WhatsAppIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20.5 12.2a8.2 8.2 0 0 1-13.2 6.8L4 20l1.1-3.3A8.2 8.2 0 1 1 20.5 12.2Z" />
+      <path d="M15.7 14.6c-.2-.1-1.1-.5-1.3-.6-.2-.1-.3-.1-.5.1-.1.1-.5.6-.6.8-.1.1-.3.1-.5 0-.2-.1-.9-.3-1.7-1.1-.6-.6-1.1-1.3-1.2-1.5-.1-.3 0-.4.1-.5.1-.1.1-.3.2-.4.1-.1.1-.3.2-.4.1-.1.1-.2.2-.4.1-.1.1-.2.1-.4 0-.1 0-.3-.1-.4-.1-.2-.5-1.2-.7-1.7-.2-.5-.4-.4-.5-.4h-.4c-.1 0-.3 0-.5.1-.2.1-.7.7-.7 1.7 0 1 .8 2 .9 2.1.1.1 1.5 2.5 3.7 3.4.5.2.9.4 1.2.5.5.1 1 .1 1.3.1.4-.1 1.1-.5 1.2-1 .1-.4.1-.8.1-1.1 0-.1-.2-.2-.4-.3Z" />
+    </svg>
+  );
+}
+
+function FeatureIcon({ type }: { type: 'diamond' | 'sparkles' | 'heart' | 'clock' }) {
+  const commonProps = {
+    width: 26,
+    height: 26,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true,
+  };
+
+  switch (type) {
+    case 'diamond':
+      return (
+        <svg {...commonProps}>
+          <path d="M6 10.5L12 4L18 10.5L12 20L6 10.5Z" />
+          <path d="M6 10.5H18M12 4L9 10.5M12 4L15 10.5M9 10.5L12 20M15 10.5L12 20" />
+        </svg>
+      );
+    case 'sparkles':
+      return (
+        <svg {...commonProps}>
+          <path d="M12 2V7M12 17V22M4.5 12H9.5M14.5 12H19.5M5.5 5.5L8 8M16 16L18.5 18.5M5.5 18.5L8 16M16 8L18.5 5.5" />
+        </svg>
+      );
+    case 'heart':
+      return (
+        <svg {...commonProps}>
+          <path d="M12 20.5C11.5 20.5 4 16.5 2.5 10.8C1.7 7.9 3.8 4 7.5 4C9.7 4 11 5.4 12 6.5C13 5.4 14.3 4 16.5 4C20.2 4 22.3 7.9 21.5 10.8C20 16.5 12.5 20.5 12 20.5Z" />
+        </svg>
+      );
+    case 'clock':
+      return (
+        <svg {...commonProps}>
+          <circle cx="12" cy="12" r="8" />
+          <path d="M12 8V12L15 14" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
+function StarRating() {
+  return (
+    <div className={styles.testimonial__stars} aria-label="5 estrelas">
+      <svg viewBox="0 0 120 24" aria-hidden="true">
+        <path d="M12 1.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.8-5.4 2.8 1-6.1-4.4-4.3 6.1-.9L12 1.5Z" />
+        <path d="M36 1.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.8-5.4 2.8 1-6.1-4.4-4.3 6.1-.9L36 1.5Z" />
+        <path d="M60 1.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.8-5.4 2.8 1-6.1-4.4-4.3 6.1-.9L60 1.5Z" />
+        <path d="M84 1.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.8-5.4 2.8 1-6.1-4.4-4.3 6.1-.9L84 1.5Z" />
+        <path d="M108 1.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.8-5.4 2.8 1-6.1-4.4-4.3 6.1-.9L108 1.5Z" />
+      </svg>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const services = [
     {
       id: 'maquiagem-social',
-      title: 'Maquiagem Social',
+      title: 'Maquiagem Express',
       description: 'Acabamento sofisticado e pele blindada, ideal para convidadas, eventos corporativos e jantares especiais.',
-      price: 'R$ 150',
+      price: 'R$ 140',
       duration: '60 min',
     },
     {
@@ -22,7 +100,7 @@ export default function HomePage() {
       title: 'Maquiagem para Noivas',
       description: 'Produção completa de alta durabilidade para o seu grande dia, pensada para emocionar e brilhar nas fotos.',
       price: 'R$ 350',
-      duration: '90 min',
+      duration: '180 min',
       featured: true,
     },
     {
@@ -39,63 +117,49 @@ export default function HomePage() {
       price: 'R$ 200',
       duration: '75 min',
     },
-    {
-      id: 'maquiagem-cilios',
-      title: 'Maquiagem + Cílios Postiços',
-      description: 'Produção completa com aplicação personalizada de cílios de alta qualidade para um olhar marcante.',
-      price: 'R$ 200',
-      duration: '75 min',
-    },
-    {
-      id: 'maquiagem-express',
-      title: 'Maquiagem Express',
-      description: 'Visual natural, elegante e rápido para reuniões, fotos de perfil ou compromissos do dia a dia.',
-      price: 'R$ 90',
-      duration: '30 min',
-    },
   ];
 
   const galleryItems = [
     {
       tag: 'Noivas',
       title: 'Noiva Clássica & Glow',
-      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&fit=crop',
+      image: '/img/gallery/noiva1.jpeg',
     },
     {
       tag: 'Formaturas',
       title: 'Smokey Eyes & Sofisticação',
-      image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800&fit=crop',
+      image: '/img/gallery/formatura1.jpeg',
     },
     {
       tag: 'Social',
       title: 'Pele Iluminada & Natural',
-      image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&fit=crop',
+      image: '/img/gallery/social1.jpeg',
     },
     {
       tag: 'Eventos',
       title: 'Glamour com Delineado Marcante',
-      image: 'https://images.unsplash.com/photo-1503236965004-941e974e62a8?w=800&fit=crop',
+      image: '/img/gallery/evento1.jpeg',
     },
   ];
 
   const features = [
     {
-      icon: '💎',
+      icon: 'diamond' as const,
       title: 'Pele Blindada',
       text: 'Técnica exclusiva à prova d’água e atrito que garante durabilidade superior a 16 horas sem craquelar.',
     },
     {
-      icon: '✨',
+      icon: 'sparkles' as const,
       title: 'Produtos de Elite',
       text: 'Uso exclusivo de cosméticos internacionais de marcas consagradas como MAC, NARS, Dior e Charlotte Tilbury.',
     },
     {
-      icon: '🤍',
+      icon: 'heart' as const,
       title: 'Atendimento Personalizado',
       text: 'Consultoria de visagismo que harmoniza a maquiagem com o seu estilo, vestido e a iluminação do evento.',
     },
     {
-      icon: '⏰',
+      icon: 'clock' as const,
       title: 'Pontualidade Rigorosa',
       text: 'Seu horário é sagrado e reservado exclusivamente para você, sem esperas e com total tranquilidade.',
     },
@@ -134,7 +198,7 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.hero__container}>
           <div className={styles.hero__content}>
-            <span className={styles.hero__label}>MAQUIADORA PROFISSIONAL • SÃO PAULO</span>
+            <span className={styles.hero__label}>MAQUIADORA PROFISSIONAL • GUARAREMA-SP</span>
             <h1 className={styles.hero__title}>Realçando sua beleza com elegância e perfeição.</h1>
             <p className={styles.hero__subtitle}>
               Atendimento exclusivo para noivas, formandas e momentos inesquecíveis.
@@ -157,7 +221,8 @@ export default function HomePage() {
                 className={`${styles.btn} ${styles['btn--whatsapp']}`}
                 style={{ padding: '14px 28px' }}
               >
-                <span>💬</span> Falar no WhatsApp
+                <span className={styles.whatsapp_button_icon}><WhatsAppIcon /></span>
+                Falar no WhatsApp
               </a>
             </div>
 
@@ -188,7 +253,9 @@ export default function HomePage() {
           <div className={styles.features__grid}>
             {features.map((item) => (
               <div key={item.title} className={styles.feature__card}>
-                <span className={styles.feature__icon}>{item.icon}</span>
+                <span className={styles.feature__icon}>
+                  <FeatureIcon type={item.icon} />
+                </span>
                 <h3 className={styles.feature__title}>{item.title}</h3>
                 <p className={styles.feature__text}>{item.text}</p>
               </div>
@@ -240,7 +307,8 @@ export default function HomePage() {
               className={`${styles.btn} ${styles['btn--whatsapp']}`}
               style={{ padding: '14px 32px' }}
             >
-              <span>💬</span> Chamar no WhatsApp
+              <span className={styles.whatsapp_button_icon}><WhatsAppIcon /></span>
+              Chamar no WhatsApp
             </a>
           </div>
         </div>
@@ -280,7 +348,7 @@ export default function HomePage() {
             {testimonials.map((item) => (
               <div key={item.name} className={styles.testimonial__card}>
                 <div>
-                  <div className={styles.testimonial__stars}>⭐⭐⭐⭐⭐</div>
+                  <StarRating />
                   <p className={styles.testimonial__quote}>"{item.quote}"</p>
                 </div>
                 <div className={styles.testimonial__author}>
@@ -330,7 +398,8 @@ export default function HomePage() {
               className={`${styles.btn} ${styles['btn--whatsapp']}`}
               style={{ padding: '14px 28px' }}
             >
-              <span>💬</span> Falar pelo WhatsApp
+              <span className={styles.whatsapp_button_icon}><WhatsAppIcon /></span>
+              Falar pelo WhatsApp
             </a>
           </div>
         </div>
@@ -344,7 +413,7 @@ export default function HomePage() {
               <h3>Mariana Aparicio</h3>
               <p style={{ marginTop: '8px' }}>Maquiadora Profissional</p>
               <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)', marginTop: '8px' }}>
-                Atendimento com hora marcada em estúdio e a domicílio em São Paulo.
+                Atendimento com hora marcada em estúdio em Guararema-SP.
               </p>
             </div>
             <div className={styles['footer__links']}>
@@ -379,7 +448,8 @@ export default function HomePage() {
                   textDecoration: 'none',
                 }}
               >
-                <span>💬</span> WhatsApp: (11) 91637-9775
+                <span className={styles.whatsapp_button_icon}><WhatsAppIcon /></span>
+                WhatsApp: (11) 91637-9775
               </a>
             </div>
           </div>

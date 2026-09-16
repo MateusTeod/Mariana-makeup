@@ -357,16 +357,28 @@
 }
 
 .page_btn--whatsapp__GOtVk {
-  background-color: #25D366;
+  position: relative;
+  background: linear-gradient(135deg, #2bd46a 0%, #19a853 100%);
   color: #ffffff !important;
-  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.page_btn--whatsapp__GOtVk::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0));
+  opacity: 0.8;
+  pointer-events: none;
 }
 
 .page_btn--whatsapp__GOtVk:hover {
-  background-color: #20BA5A;
+  background: linear-gradient(135deg, #25c862 0%, #148d4a 100%);
   color: #ffffff !important;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(37, 211, 102, 0.42);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 30px rgba(37, 211, 102, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .page_card__QV0Om {
@@ -427,33 +439,37 @@
 
 .page_nav__dropdown__Z51uM {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   right: 0;
-  margin-top: 8px;
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  min-width: 220px;
+  margin-top: 0;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(214, 174, 101, 0.25);
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(43, 28, 34, 0.12), 0 8px 20px rgba(184, 109, 131, 0.06);
+  min-width: 230px;
   z-index: 1000;
   overflow: hidden;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
 }
 
 .page_nav__dropdown_header__tKnfn {
-  padding: 12px 16px;
+  padding: 14px 16px 12px;
   font-size: 13px;
   font-weight: 600;
   color: var(--color-text);
+  background: linear-gradient(180deg, rgba(214,174,101,0.06), rgba(255,255,255,0));
 }
 
 .page_nav__dropdown_divider__VfIa0 {
   height: 1px;
-  background: var(--color-border);
+  background: linear-gradient(90deg, transparent, rgba(184, 109, 131, 0.22), transparent);
 }
 
 .page_nav__dropdown_item__U6RFq {
   display: flex;
   align-items: center;
+  gap: 10px;
   width: 100%;
   padding: 12px 16px;
   background: none;
@@ -463,15 +479,23 @@
   color: var(--color-text);
   text-decoration: none;
   font-size: 13px;
-  transition: background-color var(--transition-fast);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .page_nav__dropdown_item__U6RFq:hover {
-  background-color: var(--color-bg);
+  background: linear-gradient(90deg, rgba(214,174,101,0.08), rgba(184,109,131,0.05));
+  transform: translateX(2px);
 }
 
 .page_nav__dropdown_item__U6RFq:active {
   background-color: rgba(216, 154, 171, 0.1);
+}
+
+.page_nav__dropdown_icon__hkos2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
 }
 
 .page_btn--sm__DlHV_ {
@@ -556,9 +580,21 @@
 }
 
 .page_feature__icon__jJgXv {
-  font-size: 32px;
+  width: 52px;
+  height: 52px;
   margin-bottom: 16px;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(214, 174, 101, 0.15), rgba(196, 118, 133, 0.12));
+  color: var(--color-primary);
+}
+
+.page_feature__icon__jJgXv svg {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
 }
 
 .page_feature__title__2XzQ8 {
@@ -605,9 +641,29 @@
 }
 
 .page_testimonial__stars__zZbPl {
-  color: #d6ae65;
-  font-size: 18px;
   margin-bottom: 16px;
+  line-height: 1;
+}
+
+.page_testimonial__stars__zZbPl svg {
+  width: 120px;
+  height: 24px;
+  display: block;
+  fill: #d5a733;
+  filter: drop-shadow(0 3px 6px rgba(213, 167, 51, 0.35));
+}
+
+.page_whatsapp_button_icon__neIXX {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.page_whatsapp_button_icon__neIXX svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .page_testimonial__quote__T4ibo {
@@ -669,14 +725,16 @@
   box-shadow: var(--shadow-sm);
 }
 
-.page_gallery__item__eo3YA img {
+.page_gallery__item__eo3YA img,
+.page_gallery__item__eo3YA video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.page_gallery__item__eo3YA:hover img {
+.page_gallery__item__eo3YA:hover img,
+.page_gallery__item__eo3YA:hover video {
   transform: scale(1.05);
 }
 
