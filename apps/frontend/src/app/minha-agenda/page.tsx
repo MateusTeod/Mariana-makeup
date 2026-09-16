@@ -22,6 +22,61 @@ type Appointment = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001/api/v1';
 
+function CalendarIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M8 3v4M16 3v4M3 10h18" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M12 8v4l2.5 2.5" />
+    </svg>
+  );
+}
+
+function DollarIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+      <path d="M12 1v22" />
+      <path d="M17 5.5c0-1.9-2.2-3.5-5-3.5s-5 1.6-5 3.5S9.2 9 12 9s5 1.6 5 3.5-2.2 3.5-5 3.5-5-1.6-5-3.5" />
+    </svg>
+  );
+}
+
+function NoteIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v9A2.5 2.5 0 0 1 17.5 17H9l-5 4v-15.5Z" />
+      <path d="M8 8h8M8 12h8" />
+    </svg>
+  );
+}
+
+function WarningIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+      <path d="M12 9v4" />
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 17h.01" />
+    </svg>
+  );
+}
+
+function InboxIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+      <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Z" />
+      <path d="M4 13h4l2 3h4l2-3h4" />
+    </svg>
+  );
+}
+
 export default function MinhaAgendaPage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
@@ -123,12 +178,12 @@ export default function MinhaAgendaPage() {
     );
   }
 
-  const statusColors: Record<string, { bg: string; text: string; label: string }> = {
-    PENDING: { bg: '#fff3cd', text: '#856404', label: '⏳ Pendente' },
-    CONFIRMED: { bg: '#d4edda', text: '#155724', label: '✅ Confirmado' },
-    COMPLETED: { bg: '#d1ecf1', text: '#0c5460', label: '✓ Realizado' },
-    CANCELLED: { bg: '#f8d7da', text: '#721c24', label: '❌ Cancelado' },
-    NO_SHOW: { bg: '#f8d7da', text: '#721c24', label: '⚠️ Não compareceu' },
+  const statusColors: Record<string, { bg: string; text: string; label: string; icon: string }> = {
+    PENDING: { bg: '#fff3cd', text: '#856404', label: 'Pendente', icon: 'clock' },
+    CONFIRMED: { bg: '#d4edda', text: '#155724', label: 'Confirmado', icon: 'check' },
+    COMPLETED: { bg: '#d1ecf1', text: '#0c5460', label: 'Realizado', icon: 'done' },
+    CANCELLED: { bg: '#f8d7da', text: '#721c24', label: 'Cancelado', icon: 'cancel' },
+    NO_SHOW: { bg: '#f8d7da', text: '#721c24', label: 'Não compareceu', icon: 'warn' },
   };
 
   return (
@@ -191,9 +246,13 @@ export default function MinhaAgendaPage() {
               borderBottom: activeTab === 'upcoming' ? '2px solid var(--color-primary)' : 'none',
               cursor: 'pointer',
               transition: 'all var(--transition-base)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
           >
-            📅 Próximos ({appointments.filter(a => new Date(a.startAt) > new Date()).length})
+            <CalendarIcon />
+            Próximos ({appointments.filter(a => new Date(a.startAt) > new Date()).length})
           </button>
           <button
             onClick={() => setActiveTab('history')}
@@ -208,9 +267,16 @@ export default function MinhaAgendaPage() {
               borderBottom: activeTab === 'history' ? '2px solid var(--color-primary)' : 'none',
               cursor: 'pointer',
               transition: 'all var(--transition-base)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
           >
-            📜 Histórico
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+              <path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13A2.5 2.5 0 0 1 18.5 21h-13A2.5 2.5 0 0 1 3 18.5v-13Z" />
+              <path d="M8 7h8M8 12h8M8 17h5" />
+            </svg>
+            Histórico
           </button>
         </div>
 
@@ -223,8 +289,14 @@ export default function MinhaAgendaPage() {
             borderRadius: '8px',
             marginBottom: '24px',
             fontWeight: '500',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}>
-            ✅ {actionSuccess}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'block' }}>
+              <path d="M5 12.5 9.5 17 19 7.5" />
+            </svg>
+            <span>{actionSuccess}</span>
           </div>
         )}
 
@@ -236,8 +308,12 @@ export default function MinhaAgendaPage() {
             padding: '16px',
             borderRadius: '8px',
             marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}>
-            ⚠️ {error}
+            <WarningIcon />
+            <span>{error}</span>
           </div>
         )}
 
@@ -255,8 +331,9 @@ export default function MinhaAgendaPage() {
             padding: '48px 24px',
             color: 'var(--color-text-secondary)',
           }}>
-            <p style={{ fontSize: '18px', marginBottom: '16px' }}>
-              {activeTab === 'upcoming' ? '📭' : '📜'} {activeTab === 'upcoming' ? 'Você ainda não tem agendamentos próximos' : 'Sem histórico de agendamentos'}
+            <p style={{ fontSize: '18px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              {activeTab === 'upcoming' ? <InboxIcon /> : <CalendarIcon />}
+              {activeTab === 'upcoming' ? 'Você ainda não tem agendamentos próximos' : 'Sem histórico de agendamentos'}
             </p>
             {activeTab === 'upcoming' && (
               <Link
@@ -343,8 +420,9 @@ export default function MinhaAgendaPage() {
                     marginBottom: '16px',
                   }}>
                     <div>
-                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                        📅 Data
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <CalendarIcon />
+                        Data
                       </span>
                       <p style={{ fontWeight: '600', fontSize: '16px' }}>
                         {startDate.toLocaleDateString('pt-BR', {
@@ -356,8 +434,9 @@ export default function MinhaAgendaPage() {
                       </p>
                     </div>
                     <div>
-                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                        ⏰ Horário
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <ClockIcon />
+                        Horário
                       </span>
                       <p style={{ fontWeight: '600', fontSize: '16px' }}>
                         {startDate.toLocaleTimeString('pt-BR', {
@@ -367,8 +446,9 @@ export default function MinhaAgendaPage() {
                       </p>
                     </div>
                     <div>
-                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                        💰 Valor
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <DollarIcon />
+                        Valor
                       </span>
                       <p style={{ fontWeight: '600', fontSize: '16px' }}>
                         R$ {apt.service.price.toFixed(2)}
@@ -384,15 +464,20 @@ export default function MinhaAgendaPage() {
                       borderRadius: '8px',
                       fontSize: '13px',
                       marginBottom: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
                     }}>
-                      ⏳ Seu atendimento acontece em {daysUntil} {daysUntil === 1 ? 'dia' : 'dias'}
+                      <ClockIcon />
+                      <span>Seu atendimento acontece em {daysUntil} {daysUntil === 1 ? 'dia' : 'dias'}</span>
                     </div>
                   )}
 
                   {apt.notes && (
                     <div style={{ marginBottom: '16px' }}>
-                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                        📝 Observações
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <NoteIcon />
+                        Observações
                       </span>
                       <p style={{ fontSize: '14px', color: 'var(--color-text)' }}>
                         {apt.notes}
