@@ -89,7 +89,7 @@ function StarRating() {
 export default function HomePage() {
   const services = [
     {
-      id: 'maquiagem-social',
+      id: 'maquiagem-express',
       title: 'Maquiagem Express',
       description: 'Acabamento sofisticado e pele blindada, ideal para convidadas, eventos corporativos e jantares especiais.',
       price: 'R$ 140',
@@ -283,7 +283,7 @@ export default function HomePage() {
                     <span className={styles['service-card__duration']}>⏱️ {service.duration}</span>
                   </div>
                   <Link
-                    href="/agendar"
+                    href={`/agendar?serviceId=${service.id}`}
                     className={`${styles.btn} ${styles['btn--primary']}`}
                     style={{ marginTop: '20px', width: '100%', padding: '12px' }}
                   >

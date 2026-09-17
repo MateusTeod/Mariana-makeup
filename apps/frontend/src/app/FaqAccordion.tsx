@@ -17,7 +17,7 @@ const faqs: FaqItem[] = [
   {
     question: 'Quanto tempo dura a sessão de maquiagem?',
     answer:
-      'A duração varia de acordo com o serviço: a Maquiagem Express dura cerca de 30 minutos, a Maquiagem Social em torno de 60 minutos, e produções completas para Noivas e Formandas levam de 75 a 90 minutos para garantir o acabamento perfeito.',
+      'A duração varia conforme o serviço: Maquiagem Express (60 min), Maquiagem para Formatura (60 min), Maquiagem para Eventos (75 min) e Maquiagem para Noivas (180 min de produção completa e exclusiva).',
   },
   {
     question: 'A maquiagem resiste a lágrimas, suor e calor?',

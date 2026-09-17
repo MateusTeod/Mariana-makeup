@@ -264,7 +264,12 @@ function AgendarContent() {
                   onClick={() => setSelectedService(s.id)}
                 >
                   <h3>{s.name}</h3>
-                  <p>{s.duration} minutos</p>
+                  {s.description && (
+                    <p style={{ marginBottom: '12px', fontSize: '13px', lineHeight: 1.4 }}>
+                      {s.description}
+                    </p>
+                  )}
+                  <p style={{ fontWeight: 500 }}>⏱️ {s.duration} minutos</p>
                   <span>R$ {s.price.toFixed(2)}</span>
                 </button>
               ))}

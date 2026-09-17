@@ -15,16 +15,16 @@ $ next build
    Collecting build traces ...
 
 Route (app)                              Size     First Load JS
-┌ ○ /                                    1.41 kB        92.7 kB
+┌ ○ /                                    1.39 kB        92.7 kB
 ├ ○ /_not-found                          878 B          81.5 kB
 ├ ○ /admin                               3.97 kB          92 kB
-├ ○ /agendar                             3.66 kB        91.7 kB
+├ ○ /agendar                             3.72 kB        91.7 kB
 ├ ○ /cadastro                            2.27 kB        90.3 kB
 ├ ○ /login                               1.94 kB          90 kB
 ├ ○ /minha-agenda                        4.27 kB        92.3 kB
 ├ ○ /perfil                              3.06 kB        91.1 kB
 ├ ○ /privacidade                         190 B          91.5 kB
-├ ○ /servicos                            2.41 kB        90.4 kB
+├ ○ /servicos                            2.44 kB        90.5 kB
 ├ ○ /status                              924 B          81.5 kB
 └ ○ /termos                              190 B          91.5 kB
 + First Load JS shared by all            80.6 kB

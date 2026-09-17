@@ -13,6 +13,37 @@ type Service = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001/api/v1';
 
+const DEFAULT_SERVICES: Service[] = [
+  {
+    id: 'maquiagem-express',
+    name: 'Maquiagem Express',
+    description: 'Acabamento sofisticado e pele blindada, ideal para convidadas, eventos corporativos e jantares especiais.',
+    price: 140,
+    duration: 60,
+  },
+  {
+    id: 'maquiagem-noivas',
+    name: 'Maquiagem para Noivas',
+    description: 'Produção completa de alta durabilidade para o seu grande dia, pensada para emocionar e brilhar nas fotos.',
+    price: 350,
+    duration: 180,
+  },
+  {
+    id: 'maquiagem-formatura',
+    name: 'Maquiagem para Formatura',
+    description: 'Look deslumbrante e expressivo para sua noite de celebração, resistente a fotos com flash e muita festa.',
+    price: 180,
+    duration: 60,
+  },
+  {
+    id: 'maquiagem-eventos',
+    name: 'Maquiagem para Eventos',
+    description: 'Produção glamourosa com olhos marcantes e contorno iluminado para festas noturnas e galas.',
+    price: 200,
+    duration: 75,
+  },
+];
+
 function ServiceBadgeIcon() {
   return (
     <svg
@@ -72,49 +103,21 @@ function WhatsAppIcon() {
   );
 }
 
-function InboxIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      style={{ display: 'block' }}
-    >
-      <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Z" />
-      <path d="M4 13h4l2 3h4l2-3h4" />
-    </svg>
-  );
-}
-
 export default function ServicosPage() {
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [services, setServices] = useState<Service[]>(DEFAULT_SERVICES);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        setLoading(true);
         const response = await fetch(`${API_BASE}/services`);
-
-        if (!response.ok) {
-          throw new Error('Erro ao carregar serviços');
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setServices(data);
+          }
         }
-
-        const data = await response.json();
-        setServices(data);
-        setError('');
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro desconhecido');
-        setServices([]);
-      } finally {
-        setLoading(false);
+      } catch {
+        // Fallback to DEFAULT_SERVICES already set
       }
     };
 
@@ -164,56 +167,13 @@ export default function ServicosPage() {
           Conheça todos os serviços de maquiagem disponíveis
         </p>
 
-        {/* Error Message */}
-        {error && (
-          <div style={{
-            backgroundColor: '#fce4ec',
-            color: 'var(--color-danger)',
-            padding: '16px',
-            borderRadius: '8px',
-            marginBottom: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M12 9v4" />
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 17h.01" />
-            </svg>
-            <span>{error}</span>
-          </div>
-        )}
-
-        {/* Loading */}
-        {loading && (
-          <div style={{
-            textAlign: 'center',
-            padding: '48px 24px',
-            color: 'var(--color-text-secondary)',
-          }}>
-            Carregando serviços...
-          </div>
-        )}
-
         {/* Services Grid */}
-        {!loading && services.length > 0 && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: '24px',
-          }}>
-            {services.map((service) => (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '24px',
+        }}>
+          {services.map((service) => (
               <Link
                 key={service.id}
                 href={`/agendar?serviceId=${service.id}`}
@@ -335,21 +295,6 @@ export default function ServicosPage() {
               </Link>
             ))}
           </div>
-        )}
-
-        {/* Empty State */}
-        {!loading && services.length === 0 && !error && (
-          <div style={{
-            textAlign: 'center',
-            padding: '48px 24px',
-            color: 'var(--color-text-secondary)',
-          }}>
-            <p style={{ fontSize: '18px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-              <InboxIcon />
-              Nenhum serviço disponível no momento
-            </p>
-          </div>
-        )}
 
         {/* Info Section */}
         <div

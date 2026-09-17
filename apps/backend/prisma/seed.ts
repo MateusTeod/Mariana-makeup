@@ -28,44 +28,30 @@ async function main() {
   // Create services
   const services = [
     {
-      name: 'Maquiagem Social',
-      slug: 'maquiagem-social',
-      description: 'Maquiagem completa para eventos sociais, jantares e ocasiões especiais.',
-      price: 150,
+      name: 'Maquiagem Express',
+      slug: 'maquiagem-express',
+      description: 'Acabamento sofisticado e pele blindada, ideal para convidadas, eventos corporativos e jantares especiais.',
+      price: 140,
       duration: 60,
     },
     {
       name: 'Maquiagem para Noivas',
       slug: 'maquiagem-noivas',
-      description: 'Maquiagem especial para o grande dia, com teste previo incluso.',
+      description: 'Produção completa de alta durabilidade para o seu grande dia, pensada para emocionar e brilhar nas fotos.',
       price: 350,
-      duration: 90,
+      duration: 180,
     },
     {
       name: 'Maquiagem para Formatura',
       slug: 'maquiagem-formatura',
-      description: 'Maquiagem deslumbrante para sua formatura.',
+      description: 'Look deslumbrante e expressivo para sua noite de celebração, resistente a fotos com flash e muita festa.',
       price: 180,
       duration: 60,
     },
     {
       name: 'Maquiagem para Eventos',
       slug: 'maquiagem-eventos',
-      description: 'Maquiagem glamourosa para festas e eventos noturnos.',
-      price: 200,
-      duration: 75,
-    },
-    {
-      name: 'Maquiagem Express',
-      slug: 'maquiagem-express',
-      description: 'Maquiagem rapida e elegante para o dia a dia.',
-      price: 90,
-      duration: 30,
-    },
-    {
-      name: 'Maquiagem + Cilios',
-      slug: 'maquiagem-cilios',
-      description: 'Maquiagem completa com aplicação de cilios posticos.',
+      description: 'Produção glamourosa com olhos marcantes e contorno iluminado para festas noturnas e galas.',
       price: 200,
       duration: 75,
     },
@@ -74,12 +60,31 @@ async function main() {
   for (const service of services) {
     await prisma.service.upsert({
       where: { slug: service.slug },
-      update: {},
-      create: service,
+      update: {
+        name: service.name,
+        description: service.description,
+        price: service.price,
+        duration: service.duration,
+        active: true,
+      },
+      create: {
+        ...service,
+        active: true,
+      },
     });
   }
 
-  console.log('Services created:', services.length);
+  // Deactivate any legacy service not in the standardized 4
+  await prisma.service.updateMany({
+    where: {
+      slug: { notIn: services.map((s) => s.slug) },
+    },
+    data: {
+      active: false,
+    },
+  });
+
+  console.log('Services created / synchronized:', services.length);
 
   // Create availability (Mon-Sat, 8:00-18:00)
   await prisma.availability.deleteMany({});
