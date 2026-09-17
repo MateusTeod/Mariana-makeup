@@ -192,17 +192,47 @@ export class AdminService {
   }
 
   async getClients() {
-    return this.prisma.user.findMany({
+    const clients = await this.prisma.user.findMany({
       where: { role: 'CLIENT' },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        createdAt: true,
         appointments: {
+          select: { startAt: true, price: true, status: true },
           orderBy: { startAt: 'desc' },
-          take: 1,
         },
         _count: {
           select: { appointments: true },
         },
       },
+    });
+
+    return clients.map((client) => {
+      const completedAppointments = client.appointments.filter(
+        (a) => !['CANCELLED', 'NO_SHOW'].includes(a.status),
+      );
+      const totalSpent = completedAppointments.reduce(
+        (sum, a) => sum + Number(a.price),
+        0,
+      );
+      const lastAppointment =
+        completedAppointments.length > 0
+          ? completedAppointments[0].startAt
+          : null;
+
+      return {
+        id: client.id,
+        name: client.name,
+        email: client.email,
+        phone: client.phone,
+        createdAt: client.createdAt,
+        totalAppointments: client._count.appointments,
+        totalSpent,
+        lastAppointment,
+      };
     });
   }
 

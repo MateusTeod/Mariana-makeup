@@ -13,171 +13,155 @@ export declare class AdminService {
         newClientsThisMonth: number;
         totalClients: number;
         recentAppointments: ({
-            service: {
-                name: string;
+            customer: {
                 id: string;
+                email: string;
+                name: string | null;
+                phone: string | null;
+            };
+            service: {
+                id: string;
+                price: number;
                 createdAt: Date;
                 updatedAt: Date;
+                name: string;
+                slug: string;
                 description: string | null;
-                price: number;
                 duration: number;
                 image: string | null;
                 active: boolean;
-                slug: string;
-            };
-            customer: {
-                name: string | null;
-                email: string;
-                phone: string | null;
-                id: string;
             };
         } & {
             status: string;
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            price: number;
+            customerId: string;
             serviceId: string;
             startAt: Date;
             endAt: Date;
-            customerId: string;
+            price: number;
             notes: string | null;
+            createdAt: Date;
+            updatedAt: Date;
         })[];
         allAppointments: ({
-            service: {
-                name: string;
+            customer: {
                 id: string;
+                email: string;
+                name: string | null;
+                phone: string | null;
+            };
+            service: {
+                id: string;
+                price: number;
                 createdAt: Date;
                 updatedAt: Date;
+                name: string;
+                slug: string;
                 description: string | null;
-                price: number;
                 duration: number;
                 image: string | null;
                 active: boolean;
-                slug: string;
-            };
-            customer: {
-                name: string | null;
-                email: string;
-                phone: string | null;
-                id: string;
             };
         } & {
             status: string;
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            price: number;
+            customerId: string;
             serviceId: string;
             startAt: Date;
             endAt: Date;
-            customerId: string;
+            price: number;
             notes: string | null;
+            createdAt: Date;
+            updatedAt: Date;
         })[];
     }>;
     getCalendarIcs(): Promise<string>;
     getAgenda(startDate?: string, endDate?: string): Promise<({
-        service: {
-            name: string;
+        customer: {
             id: string;
+            email: string;
+            name: string | null;
+            phone: string | null;
+        };
+        service: {
+            id: string;
+            price: number;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
+            slug: string;
             description: string | null;
-            price: number;
             duration: number;
             image: string | null;
             active: boolean;
-            slug: string;
-        };
-        customer: {
-            name: string | null;
-            email: string;
-            phone: string | null;
-            id: string;
         };
     } & {
         status: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        price: number;
+        customerId: string;
         serviceId: string;
         startAt: Date;
         endAt: Date;
-        customerId: string;
+        price: number;
         notes: string | null;
-    })[]>;
-    getClients(): Promise<({
-        appointments: {
-            status: string;
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            price: number;
-            serviceId: string;
-            startAt: Date;
-            endAt: Date;
-            customerId: string;
-            notes: string | null;
-        }[];
-        _count: {
-            appointments: number;
-        };
-    } & {
-        name: string | null;
-        email: string;
-        password: string | null;
-        phone: string | null;
-        id: string;
-        role: string;
         createdAt: Date;
         updatedAt: Date;
     })[]>;
+    getClients(): Promise<{
+        id: string;
+        name: string | null;
+        email: string;
+        phone: string | null;
+        createdAt: Date;
+        totalAppointments: number;
+        totalSpent: number;
+        lastAppointment: Date | null;
+    }[]>;
     getClientDetails(id: string): Promise<({
         profile: {
             id: string;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
-            notes: string | null;
             userId: string;
             preferences: string | null;
         } | null;
         appointments: ({
             service: {
-                name: string;
                 id: string;
+                price: number;
                 createdAt: Date;
                 updatedAt: Date;
+                name: string;
+                slug: string;
                 description: string | null;
-                price: number;
                 duration: number;
                 image: string | null;
                 active: boolean;
-                slug: string;
             };
         } & {
             status: string;
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            price: number;
+            customerId: string;
             serviceId: string;
             startAt: Date;
             endAt: Date;
-            customerId: string;
+            price: number;
             notes: string | null;
+            createdAt: Date;
+            updatedAt: Date;
         })[];
         _count: {
             appointments: number;
         };
     } & {
-        name: string | null;
-        email: string;
-        password: string | null;
-        phone: string | null;
-        id: string;
         role: string;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
+        email: string;
+        password: string | null;
+        name: string | null;
+        phone: string | null;
     }) | null>;
 }

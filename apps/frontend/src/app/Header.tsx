@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { useState } from 'react';
 import styles from './page.module.css';
 
-function NavIcon({ type }: { type: 'calendar' | 'user' | 'logout' }) {
+function NavIcon({ type }: { type: 'calendar' | 'user' | 'users' | 'logout' }) {
   const commonProps = {
     width: 15,
     height: 15,
@@ -31,6 +31,15 @@ function NavIcon({ type }: { type: 'calendar' | 'user' | 'logout' }) {
         <svg {...commonProps}>
           <path d="M20 21C20 17.8 16.8 15 12 15C7.2 15 4 17.8 4 21" />
           <circle cx="12" cy="8" r="4" />
+        </svg>
+      );
+    case 'users':
+      return (
+        <svg {...commonProps}>
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
       );
     case 'logout':
@@ -85,13 +94,13 @@ export function Header() {
                   <div className={styles.nav__dropdown_divider} />
                   {user.role === 'ADMIN' ? (
                     <Link
-                      href="/admin"
+                      href="/clientes"
                       className={styles.nav__dropdown_item}
                       onClick={() => setDropdownOpen(false)}
                       style={{ color: 'var(--color-primary-hover)', fontWeight: 600 }}
                     >
-                      <span className={styles.nav__dropdown_icon}><NavIcon type="calendar" /></span>
-                      Agenda de Clientes (Painel)
+                      <span className={styles.nav__dropdown_icon}><NavIcon type="users" /></span>
+                      Ver Clientes
                     </Link>
                   ) : (
                     <Link
