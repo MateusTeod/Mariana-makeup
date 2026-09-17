@@ -5,11 +5,6 @@ $ next build
    Linting and checking validity of types ...
 
  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/basic-features/eslint#migrating-existing-config
-
-./src/app/AdminDashboard.tsx
-111:11  Warning: 'user' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
    Collecting page data ...
    Generating static pages (0/14) ...
    Generating static pages (3/14) 
@@ -29,12 +24,12 @@ Route (app)                              Size     First Load JS
 ├ ○ /minha-agenda                        4.27 kB        92.3 kB
 ├ ○ /perfil                              3.06 kB        91.1 kB
 ├ ○ /privacidade                         190 B          91.5 kB
-├ ○ /servicos                            2.44 kB        90.5 kB
+├ ○ /servicos                            6.29 kB        94.3 kB
 ├ ○ /status                              924 B          81.5 kB
 └ ○ /termos                              190 B          91.5 kB
 + First Load JS shared by all            80.6 kB
-  ├ chunks/5f635570-a50d33fc80fb1ad9.js  51.1 kB
-  ├ chunks/871-855cb544086cee2b.js       27.5 kB
+  ├ chunks/5f635570-07124372941f8934.js  51.1 kB
+  ├ chunks/871-698639e995348deb.js       27.5 kB
   ├ chunks/main-app-5b9896fb4481501a.js  231 B
   └ chunks/webpack-24bbfa2316a973dc.js   1.77 kB
 

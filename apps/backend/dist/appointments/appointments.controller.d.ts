@@ -28,10 +28,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     }>;
     findMyAppointments(req: any): Promise<({
@@ -53,10 +53,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     })[]>;
     findMyUpcoming(req: any): Promise<({
@@ -78,10 +78,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     })[]>;
     findMyHistory(req: any): Promise<({
@@ -103,10 +103,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     })[]>;
     findAll(): Promise<({
@@ -134,10 +134,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     })[]>;
     findById(id: string, req: any): Promise<{
@@ -165,10 +165,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     }>;
     cancel(id: string, req: any): Promise<{
@@ -200,10 +200,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     }>;
     updateStatus(id: string, status: any): Promise<{
@@ -235,10 +235,10 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     }>;
 }

@@ -24,8 +24,9 @@ let ServicesController = class ServicesController {
     constructor(servicesService) {
         this.servicesService = servicesService;
     }
-    findAll() {
-        return this.servicesService.findAll();
+    findAll(all) {
+        const activeOnly = all !== 'true';
+        return this.servicesService.findAll(activeOnly);
     }
     findBySlug(slug) {
         return this.servicesService.findBySlug(slug);
@@ -46,8 +47,9 @@ let ServicesController = class ServicesController {
 exports.ServicesController = ServicesController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('all')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ServicesController.prototype, "findAll", null);
 __decorate([

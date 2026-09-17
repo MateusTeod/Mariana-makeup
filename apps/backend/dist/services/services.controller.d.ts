@@ -4,7 +4,7 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 export declare class ServicesController {
     private readonly servicesService;
     constructor(servicesService: ServicesService);
-    findAll(): Promise<{
+    findAll(all?: string): Promise<{
         name: string;
         id: string;
         createdAt: Date;

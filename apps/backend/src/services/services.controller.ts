@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
@@ -20,8 +21,9 @@ export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
   @Get()
-  findAll() {
-    return this.servicesService.findAll();
+  findAll(@Query('all') all?: string) {
+    const activeOnly = all !== 'true';
+    return this.servicesService.findAll(activeOnly);
   }
 
   @Get(':slug')

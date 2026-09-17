@@ -77,6 +77,17 @@ export class ServicesService {
   async remove(id: string) {
     await this.findById(id);
 
+    const appointmentsCount = await this.prisma.appointment.count({
+      where: { serviceId: id },
+    });
+
+    if (appointmentsCount > 0) {
+      return this.prisma.service.update({
+        where: { id },
+        data: { active: false },
+      });
+    }
+
     return this.prisma.service.delete({
       where: { id },
     });

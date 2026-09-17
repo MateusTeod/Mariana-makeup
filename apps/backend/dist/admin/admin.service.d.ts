@@ -37,10 +37,10 @@ export declare class AdminService {
             createdAt: Date;
             updatedAt: Date;
             price: number;
+            serviceId: string;
             startAt: Date;
             endAt: Date;
             customerId: string;
-            serviceId: string;
             notes: string | null;
         })[];
         allAppointments: ({
@@ -68,10 +68,10 @@ export declare class AdminService {
             createdAt: Date;
             updatedAt: Date;
             price: number;
+            serviceId: string;
             startAt: Date;
             endAt: Date;
             customerId: string;
-            serviceId: string;
             notes: string | null;
         })[];
     }>;
@@ -101,10 +101,10 @@ export declare class AdminService {
         createdAt: Date;
         updatedAt: Date;
         price: number;
+        serviceId: string;
         startAt: Date;
         endAt: Date;
         customerId: string;
-        serviceId: string;
         notes: string | null;
     })[]>;
     getClients(): Promise<({
@@ -114,10 +114,10 @@ export declare class AdminService {
             createdAt: Date;
             updatedAt: Date;
             price: number;
+            serviceId: string;
             startAt: Date;
             endAt: Date;
             customerId: string;
-            serviceId: string;
             notes: string | null;
         }[];
         _count: {
@@ -161,10 +161,10 @@ export declare class AdminService {
             createdAt: Date;
             updatedAt: Date;
             price: number;
+            serviceId: string;
             startAt: Date;
             endAt: Date;
             customerId: string;
-            serviceId: string;
             notes: string | null;
         })[];
         _count: {
