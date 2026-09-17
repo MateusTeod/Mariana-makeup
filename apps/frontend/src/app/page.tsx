@@ -1,6 +1,11 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/lib/AuthContext';
 import { Header } from './Header';
 import { FaqAccordion } from './FaqAccordion';
+import { AdminDashboard } from './AdminDashboard';
 import styles from './page.module.css';
 
 const WHATSAPP_NUMBER = '5511916379775';
@@ -87,6 +92,19 @@ function StarRating() {
 }
 
 export default function HomePage() {
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const [viewAsClient, setViewAsClient] = useState(false);
+
+  // If logged in as ADMIN and not in preview mode, render Admin Dashboard
+  if (!isLoading && isAuthenticated && user?.role === 'ADMIN' && !viewAsClient) {
+    return (
+      <>
+        <Header />
+        <AdminDashboard onPreviewClientSite={() => setViewAsClient(true)} />
+      </>
+    );
+  }
+
   const services = [
     {
       id: 'maquiagem-express',
@@ -193,6 +211,40 @@ export default function HomePage() {
     <main>
       {/* Navigation */}
       <Header />
+
+      {viewAsClient && (
+        <div
+          style={{
+            backgroundColor: '#351c2a',
+            color: '#fff',
+            padding: '12px 24px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '16px',
+            fontSize: '13px',
+            fontWeight: 500,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          }}
+        >
+          <span>👁️ Você está visualizando o site como visitante/cliente.</span>
+          <button
+            onClick={() => setViewAsClient(false)}
+            style={{
+              backgroundColor: '#d6ae65',
+              color: '#351c2a',
+              border: 'none',
+              padding: '6px 14px',
+              borderRadius: '6px',
+              fontWeight: 700,
+              fontSize: '12px',
+              cursor: 'pointer',
+            }}
+          >
+            Voltar para o Painel Administrativo
+          </button>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className={styles.hero}>

@@ -10,15 +10,19 @@ export class AdminService {
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const now = new Date();
+    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0);
+    const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
 
     const [
       todayAppointments,
+      upcomingAppointments,
       monthAppointments,
       completedThisMonth,
       cancelledThisMonth,
+      newClientsThisMonth,
       totalClients,
+      allAppointments,
     ] = await Promise.all([
       this.prisma.appointment.count({
         where: {
@@ -26,13 +30,17 @@ export class AdminService {
           status: { notIn: ['CANCELLED', 'NO_SHOW'] },
         },
       }),
-      this.prisma.appointment.findMany({
+      this.prisma.appointment.count({
+        where: {
+          startAt: { gte: now },
+          status: { notIn: ['CANCELLED', 'NO_SHOW'] },
+        },
+      }),
+      this.prisma.appointment.count({
         where: {
           startAt: { gte: monthStart, lte: monthEnd },
           status: { notIn: ['CANCELLED', 'NO_SHOW'] },
         },
-        include: { service: true, customer: true },
-        orderBy: { startAt: 'asc' },
       }),
       this.prisma.appointment.count({
         where: {
@@ -46,26 +54,116 @@ export class AdminService {
           status: 'CANCELLED',
         },
       }),
+      this.prisma.user.count({
+        where: {
+          role: 'CLIENT',
+          createdAt: { gte: monthStart, lte: monthEnd },
+        },
+      }),
       this.prisma.user.count({ where: { role: 'CLIENT' } }),
+      this.prisma.appointment.findMany({
+        include: {
+          service: true,
+          customer: {
+            select: { id: true, name: true, email: true, phone: true },
+          },
+        },
+        orderBy: { startAt: 'asc' },
+      }),
     ]);
 
-    const monthRevenue = monthAppointments
-      .filter((a: any) => ['PAID', 'COMPLETED'].includes(a.status))
-      .reduce((sum: number, a: any) => sum + Number(a.price), 0);
+    const monthAppointmentsList = allAppointments.filter(
+      (a) =>
+        new Date(a.startAt) >= monthStart &&
+        new Date(a.startAt) <= monthEnd &&
+        !['CANCELLED', 'NO_SHOW'].includes(a.status),
+    );
+
+    const monthRevenue = monthAppointmentsList
+      .filter((a) => ['PAID', 'COMPLETED', 'CONFIRMED'].includes(a.status))
+      .reduce((sum, a) => sum + Number(a.price), 0);
+
+    const paidOrCompletedCount = monthAppointmentsList.filter((a) =>
+      ['PAID', 'COMPLETED'].includes(a.status),
+    ).length;
 
     const averageTicket =
-      completedThisMonth > 0 ? monthRevenue / completedThisMonth : 0;
+      paidOrCompletedCount > 0
+        ? Math.round(monthRevenue / paidOrCompletedCount)
+        : monthAppointmentsList.length > 0
+        ? Math.round(monthRevenue / monthAppointmentsList.length)
+        : 0;
 
     return {
       todayAppointments,
-      monthAppointments: monthAppointments.length,
+      upcomingAppointments,
+      monthAppointments,
       completedThisMonth,
       cancelledThisMonth,
       monthRevenue,
       averageTicket,
+      newClientsThisMonth,
       totalClients,
-      recentAppointments: monthAppointments.slice(0, 10),
+      recentAppointments: allAppointments.slice(0, 10),
+      allAppointments,
     };
+  }
+
+  async getCalendarIcs(): Promise<string> {
+    const appointments = await this.prisma.appointment.findMany({
+      where: {
+        status: { notIn: ['CANCELLED', 'NO_SHOW'] },
+      },
+      include: {
+        service: true,
+        customer: true,
+      },
+      orderBy: { startAt: 'asc' },
+    });
+
+    const formatIcsDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const escapeIcs = (str: string) => {
+      return (str || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,')
+        .replace(/\n/g, '\\n');
+    };
+
+    const events = appointments.map((apt) => {
+      const clientName = apt.customer?.name || 'Cliente';
+      const clientPhone = apt.customer?.phone || 'Não informado';
+      const serviceName = apt.service?.name || 'Maquiagem';
+      const description = `Serviço: ${serviceName}\nCliente: ${clientName}\nTelefone: ${clientPhone}\nValor: R$ ${apt.price}\nStatus: ${apt.status}${apt.notes ? `\nNotas: ${apt.notes}` : ''}`;
+
+      return [
+        'BEGIN:VEVENT',
+        `UID:mariana-apt-${apt.id}@marianaaparicio.com`,
+        `DTSTAMP:${formatIcsDate(new Date())}`,
+        `DTSTART:${formatIcsDate(new Date(apt.startAt))}`,
+        `DTEND:${formatIcsDate(new Date(apt.endAt))}`,
+        `SUMMARY:${escapeIcs(`Maquiagem: ${serviceName} - ${clientName}`)}`,
+        `DESCRIPTION:${escapeIcs(description)}`,
+        'LOCATION:Estúdio Mariana Aparicio',
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+      ].join('\r\n');
+    });
+
+    return [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Mariana Aparicio//Agenda Profissional//PT',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'X-WR-CALNAME:Agenda Mariana Aparicio',
+      'X-WR-TIMEZONE:America/Sao_Paulo',
+      ...events,
+      'END:VCALENDAR',
+    ].join('\r\n');
   }
 
   async getAgenda(startDate?: string, endDate?: string) {

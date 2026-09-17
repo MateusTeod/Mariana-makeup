@@ -25,6 +25,9 @@ let AdminController = class AdminController {
     getDashboard() {
         return this.adminService.getDashboard();
     }
+    getCalendarIcs() {
+        return this.adminService.getCalendarIcs();
+    }
     getAgenda(startDate, endDate) {
         return this.adminService.getAgenda(startDate, endDate);
     }
@@ -42,6 +45,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AdminController.prototype, "getDashboard", null);
+__decorate([
+    (0, common_1.Get)('calendar/export.ics'),
+    (0, common_1.Header)('Content-Type', 'text/calendar; charset=utf-8'),
+    (0, common_1.Header)('Content-Disposition', 'attachment; filename="agenda-mariana.ics"'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "getCalendarIcs", null);
 __decorate([
     (0, common_1.Get)('agenda'),
     __param(0, (0, common_1.Query)('startDate')),

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, Param, Query, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -13,6 +13,13 @@ export class AdminController {
   @Get('dashboard')
   getDashboard() {
     return this.adminService.getDashboard();
+  }
+
+  @Get('calendar/export.ics')
+  @Header('Content-Type', 'text/calendar; charset=utf-8')
+  @Header('Content-Disposition', 'attachment; filename="agenda-mariana.ics"')
+  getCalendarIcs() {
+    return this.adminService.getCalendarIcs();
   }
 
   @Get('agenda')

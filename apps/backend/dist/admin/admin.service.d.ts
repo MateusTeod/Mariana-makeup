@@ -4,11 +4,13 @@ export declare class AdminService {
     constructor(prisma: PrismaService);
     getDashboard(): Promise<{
         todayAppointments: number;
+        upcomingAppointments: number;
         monthAppointments: number;
         completedThisMonth: number;
         cancelledThisMonth: number;
         monthRevenue: number;
         averageTicket: number;
+        newClientsThisMonth: number;
         totalClients: number;
         recentAppointments: ({
             service: {
@@ -26,12 +28,39 @@ export declare class AdminService {
             customer: {
                 name: string | null;
                 email: string;
-                password: string | null;
                 phone: string | null;
                 id: string;
-                role: string;
+            };
+        } & {
+            status: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            price: number;
+            startAt: Date;
+            endAt: Date;
+            customerId: string;
+            serviceId: string;
+            notes: string | null;
+        })[];
+        allAppointments: ({
+            service: {
+                name: string;
+                id: string;
                 createdAt: Date;
                 updatedAt: Date;
+                description: string | null;
+                price: number;
+                duration: number;
+                image: string | null;
+                active: boolean;
+                slug: string;
+            };
+            customer: {
+                name: string | null;
+                email: string;
+                phone: string | null;
+                id: string;
             };
         } & {
             status: string;
@@ -46,6 +75,7 @@ export declare class AdminService {
             notes: string | null;
         })[];
     }>;
+    getCalendarIcs(): Promise<string>;
     getAgenda(startDate?: string, endDate?: string): Promise<({
         service: {
             name: string;
