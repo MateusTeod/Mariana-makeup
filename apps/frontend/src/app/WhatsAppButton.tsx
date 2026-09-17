@@ -45,7 +45,7 @@ export function WhatsAppButton() {
       className: 'whatsapp-float__item--wpp',
     },
     {
-      href: 'https://instagram.com/marianamakeup',
+      href: 'https://instagram.com/marianaaparicio__',
       label: 'Instagram',
       Icon: InstagramIcon,
       className: 'whatsapp-float__item--instagram',
