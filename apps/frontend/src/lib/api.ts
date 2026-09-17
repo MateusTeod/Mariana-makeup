@@ -48,7 +48,7 @@ export const api = {
     apiFetch(`/availability?serviceId=${serviceId}&date=${date}`),
 
   // Appointments
-  createAppointment: (data: any, token?: string) =>
+  createAppointment: (data: Record<string, unknown>, token?: string) =>
     apiFetch('/appointments', { method: 'POST', body: JSON.stringify(data), token }),
 
   getMyAppointments: (token: string) =>

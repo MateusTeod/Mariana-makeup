@@ -68,14 +68,21 @@ export class AdminService {
     };
   }
 
-  async getAgenda(startDate: string, endDate: string) {
+  async getAgenda(startDate?: string, endDate?: string) {
+    const where: any = {};
+    if (startDate && endDate) {
+      where.startAt = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    } else if (startDate) {
+      where.startAt = { gte: new Date(startDate) };
+    } else if (endDate) {
+      where.startAt = { lte: new Date(endDate) };
+    }
+
     return this.prisma.appointment.findMany({
-      where: {
-        startAt: {
-          gte: new Date(startDate),
-          lte: new Date(endDate),
-        },
-      },
+      where,
       include: {
         service: true,
         customer: {

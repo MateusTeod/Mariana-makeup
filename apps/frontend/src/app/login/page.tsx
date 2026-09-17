@@ -10,15 +10,19 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user, login, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
 
   // Redirect if already logged in
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      router.push('/minha-agenda');
+    if (!authLoading && isAuthenticated && user) {
+      if (user.role === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/minha-agenda');
+      }
     }
-  }, [isAuthenticated, authLoading, router]);
+  }, [isAuthenticated, authLoading, router, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,8 +30,12 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(email, password);
-      router.push('/minha-agenda');
+      const loggedUser = await login(email, password);
+      if (loggedUser.role === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/minha-agenda');
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {

@@ -87,16 +87,20 @@ export default function MinhaAgendaPage() {
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'upcoming' | 'history'>('upcoming');
 
-  // Redirect if not logged in
+  // Redirect if not logged in or if admin
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
+    if (!authLoading) {
+      if (!isAuthenticated) {
+        router.push('/login');
+      } else if (user?.role === 'ADMIN') {
+        router.replace('/admin');
+      }
     }
-  }, [isAuthenticated, authLoading, router]);
+  }, [isAuthenticated, authLoading, user, router]);
 
   // Fetch appointments
   useEffect(() => {
-    if (!isAuthenticated || authLoading) return;
+    if (!isAuthenticated || authLoading || user?.role === 'ADMIN') return;
 
     const fetchAppointments = async () => {
       try {
@@ -170,7 +174,7 @@ export default function MinhaAgendaPage() {
     }
   };
 
-  if (authLoading) {
+  if (authLoading || user?.role === 'ADMIN') {
     return (
       <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
         <p>Carregando...</p>

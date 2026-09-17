@@ -46,7 +46,7 @@ export declare class AdminService {
             notes: string | null;
         })[];
     }>;
-    getAgenda(startDate: string, endDate: string): Promise<({
+    getAgenda(startDate?: string, endDate?: string): Promise<({
         service: {
             name: string;
             id: string;

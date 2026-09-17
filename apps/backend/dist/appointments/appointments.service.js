@@ -115,6 +115,17 @@ let AppointmentsService = class AppointmentsService {
             orderBy: { startAt: 'desc' },
         });
     }
+    async findAll() {
+        return this.prisma.appointment.findMany({
+            include: {
+                service: true,
+                customer: {
+                    select: { id: true, name: true, email: true, phone: true },
+                },
+            },
+            orderBy: { startAt: 'desc' },
+        });
+    }
     async findById(id, userId) {
         const appointment = await this.prisma.appointment.findUnique({
             where: { id },
@@ -154,7 +165,7 @@ let AppointmentsService = class AppointmentsService {
         return updated;
     }
     async updateStatus(id, status) {
-        const appointment = await this.findById(id);
+        await this.findById(id);
         return this.prisma.appointment.update({
             where: { id },
             data: { status },

@@ -83,14 +83,26 @@ export function Header() {
                     </span>
                   </div>
                   <div className={styles.nav__dropdown_divider} />
-                  <Link
-                    href="/minha-agenda"
-                    className={styles.nav__dropdown_item}
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    <span className={styles.nav__dropdown_icon}><NavIcon type="calendar" /></span>
-                    Meus Agendamentos
-                  </Link>
+                  {user.role === 'ADMIN' ? (
+                    <Link
+                      href="/admin"
+                      className={styles.nav__dropdown_item}
+                      onClick={() => setDropdownOpen(false)}
+                      style={{ color: 'var(--color-primary-hover)', fontWeight: 600 }}
+                    >
+                      <span className={styles.nav__dropdown_icon}><NavIcon type="calendar" /></span>
+                      Agenda de Clientes (Painel)
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/minha-agenda"
+                      className={styles.nav__dropdown_item}
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <span className={styles.nav__dropdown_icon}><NavIcon type="calendar" /></span>
+                      Meus Agendamentos
+                    </Link>
+                  )}
                   <Link
                     href="/perfil"
                     className={styles.nav__dropdown_item}

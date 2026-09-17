@@ -3,18 +3,19 @@ $ eslint "{src,test}/**/*.ts"
 C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\admin\admin.service.ts
   53:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   54:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\appointments\appointments.controller.ts
   23:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   32:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   38:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   44:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  50:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  57:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  65:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  64:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\appointments\appointments.service.ts
-  204:11  warning  'appointment' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  216:11  warning  'appointment' is assigned a value but never used  @typescript-eslint/no-unused-vars
 
 C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\auth\guards\jwt-auth.guard.ts
   9:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -23,9 +24,12 @@ C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\auth\guards\jwt-auth.gua
 C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\availability\availability.service.ts
   63:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
+C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\main.ts
+  18:9  warning  'frontendUrl' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
 C:\Users\Mateus Teodoro\Mariana-makeup\apps\backend\src\notifications\notifications.service.ts
   14:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   33:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-✖ 15 problems (0 errors, 15 warnings)
+✖ 17 problems (0 errors, 17 warnings)
 

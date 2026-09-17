@@ -4,6 +4,7 @@ import { AuthProvider } from '@/lib/AuthContext';
 import { WhatsAppButton } from './WhatsAppButton';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002'),
   title: 'Mariana Aparicio - Maquiadora Profissional',
   description:
     'Agende sua maquiagem profissional com Mariana Aparicio. Atendimento personalizado para casamentos, formaturas e eventos.',

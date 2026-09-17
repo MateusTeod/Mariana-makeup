@@ -142,6 +142,18 @@ export class AppointmentsService {
     });
   }
 
+  async findAll() {
+    return this.prisma.appointment.findMany({
+      include: {
+        service: true,
+        customer: {
+          select: { id: true, name: true, email: true, phone: true },
+        },
+      },
+      orderBy: { startAt: 'desc' },
+    });
+  }
+
   async findById(id: string, userId?: string) {
     const appointment = await this.prisma.appointment.findUnique({
       where: { id },
@@ -201,7 +213,7 @@ export class AppointmentsService {
     id: string,
     status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW',
   ) {
-    const appointment = await this.findById(id);
+    await this.findById(id);
 
     return this.prisma.appointment.update({
       where: { id },

@@ -109,6 +109,37 @@ export declare class AppointmentsController {
         serviceId: string;
         notes: string | null;
     })[]>;
+    findAll(): Promise<({
+        service: {
+            name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            description: string | null;
+            price: number;
+            duration: number;
+            image: string | null;
+            active: boolean;
+            slug: string;
+        };
+        customer: {
+            name: string | null;
+            email: string;
+            phone: string | null;
+            id: string;
+        };
+    } & {
+        status: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        price: number;
+        startAt: Date;
+        endAt: Date;
+        customerId: string;
+        serviceId: string;
+        notes: string | null;
+    })[]>;
     findById(id: string, req: any): Promise<{
         service: {
             name: string;

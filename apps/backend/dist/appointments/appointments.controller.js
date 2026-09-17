@@ -36,6 +36,9 @@ let AppointmentsController = class AppointmentsController {
     findMyHistory(req) {
         return this.appointmentsService.findHistory(req.user.id);
     }
+    findAll() {
+        return this.appointmentsService.findAll();
+    }
     findById(id, req) {
         return this.appointmentsService.findById(id, req.user.id);
     }
@@ -80,6 +83,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AppointmentsController.prototype, "findMyHistory", null);
+__decorate([
+    (0, common_1.Get)('all'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('ADMIN'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppointmentsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

@@ -45,6 +45,13 @@ export class AppointmentsController {
     return this.appointmentsService.findHistory(req.user.id);
   }
 
+  @Get('all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  findAll() {
+    return this.appointmentsService.findAll();
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findById(@Param('id') id: string, @Request() req: any) {
