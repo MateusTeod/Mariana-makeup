@@ -6,7 +6,7 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-(self["webpackChunk_N_E"] = self["webpackChunk_N_E"] || []).push([["app/admin/page"],{
+self["webpackHotUpdate_N_E"]("app/admin/page",{
 
 /***/ "(app-pages-browser)/../../node_modules/.pnpm/next@13.5.11_@babel+core@7._5413494a890810d7d155cb2a36f22d16/node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CMateus%20Teodoro%5CMariana-makeup%5Cnode_modules%5C.pnpm%5Cnext%4013.5.11_%40babel%2Bcore%407._5413494a890810d7d155cb2a36f22d16%5Cnode_modules%5Cnext%5Cdist%5Cshared%5Clib%5Clazy-dynamic%5Cdynamic-no-ssr.js&server=false!":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
@@ -29,11 +29,4 @@ eval(__webpack_require__.ts("/* __next_internal_client_entry_do_not_use__  cjs *
 
 /***/ })
 
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ __webpack_require__.O(0, ["main-app"], function() { return __webpack_exec__("(app-pages-browser)/../../node_modules/.pnpm/next@13.5.11_@babel+core@7._5413494a890810d7d155cb2a36f22d16/node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CMateus%20Teodoro%5CMariana-makeup%5Cnode_modules%5C.pnpm%5Cnext%4013.5.11_%40babel%2Bcore%407._5413494a890810d7d155cb2a36f22d16%5Cnode_modules%5Cnext%5Cdist%5Cshared%5Clib%5Clazy-dynamic%5Cdynamic-no-ssr.js&server=false!"); });
-/******/ var __webpack_exports__ = __webpack_require__.O();
-/******/ _N_E = __webpack_exports__;
-/******/ }
-]);
+});
