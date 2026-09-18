@@ -11,7 +11,8 @@
         "dev": "concurrently --kill-others --prefix \"[{name}]\" --names \"backend,frontend\" --prefix-colors \"blue.bold,magenta.bold\" \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
         "dev:frontend": "pnpm --filter frontend dev",
         "dev:backend": "pnpm --filter backend dev",
-                    "build":  "turbo run build",
+                    "build":  "pnpm --filter frontend run build",
+                    "build:all":  "turbo run build",
                     "lint":  "turbo run lint",
                     "format":  "turbo run format"
                 },
