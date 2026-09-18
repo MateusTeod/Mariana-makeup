@@ -12,10 +12,7 @@
                     "format":  "turbo run format"
                 },
     "devDependencies":  {
-                            "concurrently":  "^7.6.0",
-                            "turbo":  "^1.10.5"
-                        },
-    "dependencies":  {
-                         "pnpm":  "^11.24.0"
-                     }
+        "concurrently": "^7.6.0",
+        "turbo": "^1.10.5"
+    }
 }
