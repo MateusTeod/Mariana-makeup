@@ -55,7 +55,7 @@ model Service {
 model Appointment {
   id         String   @id @default(cuid())
   customerId String
-  customer   User     @relation(fields: [customerId], references: [id])
+  customer   User     @relation("customer_appointments", fields: [customerId], references: [id])
   serviceId  String
   service    Service  @relation(fields: [serviceId], references: [id])
   startAt    DateTime

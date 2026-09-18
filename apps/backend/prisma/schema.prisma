@@ -1,11 +1,11 @@
-// Prisma schema - SQLite for development, PostgreSQL for production
+// Prisma schema for PostgreSQL (local Docker and Supabase)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,18 +15,23 @@ model User {
   password     String?
   name         String?
   phone        String?
-  role         String           @default("CLIENT") // CLIENT | ADMIN
+  role         Role             @default(CLIENT)
   profile      CustomerProfile?
   appointments Appointment[]    @relation("customer_appointments")
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
 }
 
+enum Role {
+  CLIENT
+  ADMIN
+}
+
 model CustomerProfile {
   id          String   @id @default(cuid())
   userId      String   @unique
   user        User     @relation(fields: [userId], references: [id])
-  preferences String? // JSON string
+  preferences Json?
   notes       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -35,41 +40,50 @@ model CustomerProfile {
 model Service {
   id           String        @id @default(cuid())
   name         String
-  slug         String        @unique
+  slug         String         @unique
   description  String?
-  price        Float
-  duration     Int // minutes
+  price        Decimal        @db.Decimal(10, 2)
+  duration     Int
   image        String?
-  active       Boolean       @default(true)
+  active       Boolean        @default(true)
   appointments Appointment[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
 
 model Appointment {
-  id         String   @id @default(cuid())
+  id         String            @id @default(cuid())
   customerId String
-  customer   User     @relation("customer_appointments", fields: [customerId], references: [id])
+  customer   User              @relation("customer_appointments", fields: [customerId], references: [id])
   serviceId  String
-  service    Service  @relation(fields: [serviceId], references: [id])
+  service    Service           @relation(fields: [serviceId], references: [id])
   startAt    DateTime
   endAt      DateTime
-  status     String   @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED | NO_SHOW
-  price      Float
+  status     AppointmentStatus @default(PENDING)
+  price      Decimal           @db.Decimal(10, 2)
   notes      String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
 
   @@index([customerId])
   @@index([serviceId])
-  @@index([startAt])
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  AWAITING_PAYMENT
+  PAID
+  COMPLETED
+  CANCELLED
+  NO_SHOW
 }
 
 model Availability {
   id        String  @id @default(cuid())
-  dayOfWeek Int // 0=Sunday .. 6=Saturday
-  startTime String // "08:00"
-  endTime   String // "18:00"
+  dayOfWeek Int
+  startTime String
+  endTime   String
   active    Boolean @default(true)
 }
 
@@ -87,7 +101,7 @@ model Payment {
   provider      String?
   method        String?
   status        String?
-  providerData  String? // JSON string
+  providerData  Json?
   createdAt     DateTime @default(now())
 }
 
@@ -96,7 +110,7 @@ model Notification {
   appointmentId String?
   userId        String?
   type          String
-  payload       String? // JSON string
+  payload       Json?
   sentAt        DateTime?
   status        String?
   createdAt     DateTime  @default(now())
@@ -106,6 +120,6 @@ model AuditLog {
   id        String   @id @default(cuid())
   action    String
   actorId   String?
-  payload   String? // JSON string
+  payload   Json?
   createdAt DateTime @default(now())
 }

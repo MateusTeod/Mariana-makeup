@@ -3,21 +3,29 @@ import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
 
+const getSeedValue = (name: string, fallback?: string) => {
+  const value = process.env[name] || fallback;
+  if (!value && process.env.NODE_ENV === 'production') {
+    throw new Error(`Missing required seed environment variable: ${name}`);
+  }
+  return value as string;
+};
+
 async function main() {
   console.log('Seeding database...');
 
   // Create admin user
-  const adminPassword = await argon2.hash('Admin@123', {
+  const adminPassword = await argon2.hash(getSeedValue('SEED_ADMIN_PASSWORD', 'Admin@123'), {
     type: argon2.argon2id,
   });
 
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@mariana.com' },
+    where: { email: getSeedValue('SEED_ADMIN_EMAIL', 'admin@mariana.com') },
     update: {},
     create: {
-      email: 'admin@mariana.com',
-      name: 'Mariana Aparicio',
-      phone: '+5511916379775',
+      email: getSeedValue('SEED_ADMIN_EMAIL', 'admin@mariana.com'),
+      name: getSeedValue('SEED_ADMIN_NAME', 'Mariana Aparicio'),
+      phone: getSeedValue('SEED_ADMIN_PHONE', '+5511916379775'),
       password: adminPassword,
       role: 'ADMIN',
     },
@@ -86,8 +94,7 @@ async function main() {
 
   console.log('Services created / synchronized:', services.length);
 
-  // Create availability (Mon-Sat, 8:00-18:00)
-  await prisma.availability.deleteMany({});
+  // Create or update availability without deleting production records.
   const availabilityData = [
     { dayOfWeek: 1, startTime: '08:00', endTime: '18:00', active: true }, // Monday
     { dayOfWeek: 2, startTime: '08:00', endTime: '18:00', active: true }, // Tuesday
@@ -99,30 +106,36 @@ async function main() {
   ];
 
   for (const avail of availabilityData) {
-    await prisma.availability.create({
-      data: avail,
+    const existing = await prisma.availability.findFirst({
+      where: { dayOfWeek: avail.dayOfWeek },
     });
+
+    if (existing) {
+      await prisma.availability.update({ where: { id: existing.id }, data: avail });
+    } else {
+      await prisma.availability.create({ data: avail });
+    }
   }
 
   console.log('Availability created:', availabilityData.length);
 
   // Create a test client
-  const clientPassword = await argon2.hash('Client@123', {
+  const clientPassword = await argon2.hash(getSeedValue('SEED_CLIENT_PASSWORD', 'Client@123'), {
     type: argon2.argon2id,
   });
 
   const client = await prisma.user.upsert({
-    where: { email: 'cliente@teste.com' },
+    where: { email: getSeedValue('SEED_CLIENT_EMAIL', 'cliente@teste.com') },
     update: {},
     create: {
-      email: 'cliente@teste.com',
-      name: 'Maria Silva',
-      phone: '+5511999998888',
+      email: getSeedValue('SEED_CLIENT_EMAIL', 'cliente@teste.com'),
+      name: getSeedValue('SEED_CLIENT_NAME', 'Maria Silva'),
+      phone: getSeedValue('SEED_CLIENT_PHONE', '+5511999998888'),
       password: clientPassword,
       role: 'CLIENT',
       profile: {
         create: {
-          preferences: '{}',
+          preferences: {},
           notes: 'Cliente de teste',
         },
       },

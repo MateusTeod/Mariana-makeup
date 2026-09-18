@@ -2,6 +2,7 @@
     "name":  "maquiadora-monorepo",
     "private":  true,
     "version":  "0.1.0",
+    "packageManager": "pnpm@10.28.0",
     "scripts":  {
         "dev": "concurrently --kill-others --prefix \"[{name}]\" --names \"backend,frontend\" --prefix-colors \"blue.bold,magenta.bold\" \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
         "dev:frontend": "pnpm --filter frontend dev",

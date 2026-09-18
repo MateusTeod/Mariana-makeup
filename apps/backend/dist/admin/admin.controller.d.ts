@@ -13,99 +13,99 @@ export declare class AdminController {
         newClientsThisMonth: number;
         totalClients: number;
         recentAppointments: ({
-            customer: {
-                id: string;
-                email: string;
-                name: string | null;
-                phone: string | null;
-            };
             service: {
+                name: string;
                 id: string;
-                price: number;
                 createdAt: Date;
                 updatedAt: Date;
-                name: string;
-                slug: string;
                 description: string | null;
+                price: import("@prisma/client/runtime/library").Decimal;
                 duration: number;
                 image: string | null;
                 active: boolean;
+                slug: string;
+            };
+            customer: {
+                name: string | null;
+                email: string;
+                phone: string | null;
+                id: string;
             };
         } & {
-            status: string;
+            status: import("@prisma/client").$Enums.AppointmentStatus;
             id: string;
-            customerId: string;
+            createdAt: Date;
+            updatedAt: Date;
+            price: import("@prisma/client/runtime/library").Decimal;
             serviceId: string;
             startAt: Date;
             endAt: Date;
-            price: number;
+            customerId: string;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         })[];
         allAppointments: ({
-            customer: {
-                id: string;
-                email: string;
-                name: string | null;
-                phone: string | null;
-            };
             service: {
+                name: string;
                 id: string;
-                price: number;
                 createdAt: Date;
                 updatedAt: Date;
-                name: string;
-                slug: string;
                 description: string | null;
+                price: import("@prisma/client/runtime/library").Decimal;
                 duration: number;
                 image: string | null;
                 active: boolean;
+                slug: string;
+            };
+            customer: {
+                name: string | null;
+                email: string;
+                phone: string | null;
+                id: string;
             };
         } & {
-            status: string;
+            status: import("@prisma/client").$Enums.AppointmentStatus;
             id: string;
-            customerId: string;
+            createdAt: Date;
+            updatedAt: Date;
+            price: import("@prisma/client/runtime/library").Decimal;
             serviceId: string;
             startAt: Date;
             endAt: Date;
-            price: number;
+            customerId: string;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         })[];
     }>;
     getCalendarIcs(): Promise<string>;
     getAgenda(startDate: string, endDate: string): Promise<({
-        customer: {
-            id: string;
-            email: string;
-            name: string | null;
-            phone: string | null;
-        };
         service: {
+            name: string;
             id: string;
-            price: number;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
-            slug: string;
             description: string | null;
+            price: import("@prisma/client/runtime/library").Decimal;
             duration: number;
             image: string | null;
             active: boolean;
+            slug: string;
+        };
+        customer: {
+            name: string | null;
+            email: string;
+            phone: string | null;
+            id: string;
         };
     } & {
-        status: string;
+        status: import("@prisma/client").$Enums.AppointmentStatus;
         id: string;
-        customerId: string;
+        createdAt: Date;
+        updatedAt: Date;
+        price: import("@prisma/client/runtime/library").Decimal;
         serviceId: string;
         startAt: Date;
         endAt: Date;
-        price: number;
+        customerId: string;
         notes: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     })[]>;
     getClients(): Promise<{
         id: string;
@@ -120,48 +120,48 @@ export declare class AdminController {
     getClientDetails(id: string): Promise<({
         profile: {
             id: string;
-            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
+            notes: string | null;
             userId: string;
-            preferences: string | null;
+            preferences: import("@prisma/client/runtime/library").JsonValue | null;
         } | null;
         appointments: ({
             service: {
+                name: string;
                 id: string;
-                price: number;
                 createdAt: Date;
                 updatedAt: Date;
-                name: string;
-                slug: string;
                 description: string | null;
+                price: import("@prisma/client/runtime/library").Decimal;
                 duration: number;
                 image: string | null;
                 active: boolean;
+                slug: string;
             };
         } & {
-            status: string;
+            status: import("@prisma/client").$Enums.AppointmentStatus;
             id: string;
-            customerId: string;
+            createdAt: Date;
+            updatedAt: Date;
+            price: import("@prisma/client/runtime/library").Decimal;
             serviceId: string;
             startAt: Date;
             endAt: Date;
-            price: number;
+            customerId: string;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         })[];
         _count: {
             appointments: number;
         };
     } & {
-        role: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string | null;
         email: string;
         password: string | null;
-        name: string | null;
         phone: string | null;
+        id: string;
+        role: import("@prisma/client").$Enums.Role;
+        createdAt: Date;
+        updatedAt: Date;
     }) | null>;
 }

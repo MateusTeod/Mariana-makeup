@@ -10,7 +10,7 @@ export declare class ServicesController {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        price: number;
+        price: import("@prisma/client/runtime/library").Decimal;
         duration: number;
         image: string | null;
         active: boolean;
@@ -22,7 +22,7 @@ export declare class ServicesController {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        price: number;
+        price: import("@prisma/client/runtime/library").Decimal;
         duration: number;
         image: string | null;
         active: boolean;
@@ -34,7 +34,7 @@ export declare class ServicesController {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        price: number;
+        price: import("@prisma/client/runtime/library").Decimal;
         duration: number;
         image: string | null;
         active: boolean;
@@ -46,7 +46,7 @@ export declare class ServicesController {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        price: number;
+        price: import("@prisma/client/runtime/library").Decimal;
         duration: number;
         image: string | null;
         active: boolean;
@@ -58,7 +58,7 @@ export declare class ServicesController {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        price: number;
+        price: import("@prisma/client/runtime/library").Decimal;
         duration: number;
         image: string | null;
         active: boolean;
@@ -70,7 +70,7 @@ export declare class ServicesController {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        price: number;
+        price: import("@prisma/client/runtime/library").Decimal;
         duration: number;
         image: string | null;
         active: boolean;
