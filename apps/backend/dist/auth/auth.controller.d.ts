@@ -8,31 +8,9 @@ export declare class AuthController {
     private readonly authService;
     private readonly configService;
     constructor(authService: AuthService, configService: ConfigService);
-    register(dto: RegisterDto, res: Response): Promise<{
-        user: {
-            id: string;
-            email: string;
-            name: string | null;
-            phone: string | null;
-            role: import("@prisma/client").$Enums.Role;
-        };
-        accessToken: string;
-    }>;
-    login(dto: LoginDto, res: Response): Promise<{
-        user: {
-            id: string;
-            email: string;
-            name: string | null;
-            phone: string | null;
-            role: import("@prisma/client").$Enums.Role;
-        };
-        accessToken: string;
-    }>;
-    refresh(req: Request, res: Response, dto?: RefreshDto): Promise<{
-        accessToken: string;
-    }>;
-    logout(res: Response): Promise<{
-        message: string;
-    }>;
+    register(dto: RegisterDto, res: Response): unknown;
+    login(dto: LoginDto, res: Response): unknown;
+    refresh(req: Request, res: Response, dto?: RefreshDto): unknown;
+    logout(res: Response): unknown;
     private setRefreshCookie;
 }

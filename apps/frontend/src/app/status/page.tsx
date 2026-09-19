@@ -5,7 +5,7 @@ export default function StatusPage() {
   const [status, setStatus] = useState<string>('Loading...');
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/status')
+    fetch('/api/v1/api/status')
       .then((res) => res.json())
       .then((data) => setStatus(data.message))
       .catch(() => setStatus('Error connecting to backend'));

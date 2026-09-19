@@ -9,7 +9,7 @@ type Step = 'service' | 'datetime' | 'info' | 'confirm';
 type Service = { id: string; name: string; slug?: string; price: number; duration: number; description?: string };
 type TimeSlot = { time: string; available: boolean };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
 
 function AgendarContent() {
   const { user } = useAuth();

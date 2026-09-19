@@ -17,7 +17,7 @@ type Client = {
   lastAppointment: string | null;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
 
 export default function ClientesPage() {
   const router = useRouter();
