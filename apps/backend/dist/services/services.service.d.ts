@@ -4,12 +4,12 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 export declare class ServicesService {
     private prisma;
     constructor(prisma: PrismaService);
-    findAll(activeOnly?: boolean): unknown;
-    findBySlug(slug: string): unknown;
-    findById(id: string): unknown;
-    create(dto: CreateServiceDto): unknown;
-    update(id: string, dto: UpdateServiceDto): unknown;
-    toggleActive(id: string): unknown;
-    remove(id: string): unknown;
+    findAll(activeOnly?: boolean): Promise<any>;
+    findBySlug(slug: string): Promise<any>;
+    findById(id: string): Promise<any>;
+    create(dto: CreateServiceDto): Promise<any>;
+    update(id: string, dto: UpdateServiceDto): Promise<any>;
+    toggleActive(id: string): Promise<any>;
+    remove(id: string): Promise<any>;
     private generateSlug;
 }

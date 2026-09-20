@@ -2,5 +2,9 @@ import { PrismaService } from '../prisma/prisma.service';
 export declare class HealthController {
     private prisma;
     constructor(prisma: PrismaService);
-    check(): unknown;
+    check(): Promise<{
+        status: string;
+        timestamp: string;
+        database: string;
+    }>;
 }

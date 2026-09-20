@@ -7,12 +7,12 @@ export declare class AppointmentsService {
     private availabilityService;
     private notificationsService;
     constructor(prisma: PrismaService, availabilityService: AvailabilityService, notificationsService: NotificationsService);
-    create(dto: CreateAppointmentDto, userId?: string): unknown;
-    findByUser(userId: string): unknown;
-    findUpcoming(userId: string): unknown;
-    findHistory(userId: string): unknown;
-    findAll(): unknown;
-    findById(id: string, userId?: string): unknown;
-    cancel(id: string, userId: string): unknown;
-    updateStatus(id: string, status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW'): unknown;
+    create(dto: CreateAppointmentDto, userId?: string): Promise<any>;
+    findByUser(userId: string): Promise<any>;
+    findUpcoming(userId: string): Promise<any>;
+    findHistory(userId: string): Promise<any>;
+    findAll(): Promise<any>;
+    findById(id: string, userId?: string): Promise<any>;
+    cancel(id: string, userId: string): Promise<any>;
+    updateStatus(id: string, status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW'): Promise<any>;
 }

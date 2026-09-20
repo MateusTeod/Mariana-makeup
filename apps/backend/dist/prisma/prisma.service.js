@@ -9,6 +9,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
+const library_1 = require("@prisma/client/runtime/library");
+const decimalPrototype = library_1.Decimal.prototype;
+decimalPrototype.toJSON = function () {
+    return this.toNumber();
+};
 let PrismaService = class PrismaService extends client_1.PrismaClient {
     async onModuleInit() {
         await this.$connect();

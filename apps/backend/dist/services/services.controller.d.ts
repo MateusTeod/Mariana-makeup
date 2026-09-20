@@ -4,10 +4,10 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 export declare class ServicesController {
     private readonly servicesService;
     constructor(servicesService: ServicesService);
-    findAll(all?: string): unknown;
-    findBySlug(slug: string): unknown;
-    create(dto: CreateServiceDto): unknown;
-    update(id: string, dto: UpdateServiceDto): unknown;
-    toggleActive(id: string): unknown;
-    remove(id: string): unknown;
+    findAll(all?: string): Promise<any>;
+    findBySlug(slug: string): Promise<any>;
+    create(dto: CreateServiceDto): Promise<any>;
+    update(id: string, dto: UpdateServiceDto): Promise<any>;
+    toggleActive(id: string): Promise<any>;
+    remove(id: string): Promise<any>;
 }
