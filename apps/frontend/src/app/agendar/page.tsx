@@ -270,7 +270,7 @@ function AgendarContent() {
                     </p>
                   )}
                   <p style={{ fontWeight: 500 }}>⏱️ {s.duration} minutos</p>
-                  <span>R$ {s.price.toFixed(2)}</span>
+                  <span>R$ {Number(s.price).toFixed(2)}</span>
                 </button>
               ))}
             </div>
@@ -394,7 +394,7 @@ function AgendarContent() {
               </div>
               <div className="booking__summary-item">
                 <span>Valor</span>
-                <strong>R$ {service.price.toFixed(2)}</strong>
+                <strong>R$ {Number(service.price).toFixed(2)}</strong>
               </div>
               <div className="booking__summary-item">
                 <span>Cliente</span>

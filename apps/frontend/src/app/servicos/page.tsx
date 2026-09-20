@@ -598,7 +598,7 @@ export default function ServicosPage() {
                       color: isServiceActive ? 'var(--color-primary-hover)' : '#7a6871',
                     }}
                   >
-                    R$ {service.price.toFixed(2)}
+                    R$ {Number(service.price).toFixed(2)}
                   </p>
                 </div>
 

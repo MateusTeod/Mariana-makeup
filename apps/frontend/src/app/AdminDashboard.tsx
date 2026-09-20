@@ -884,7 +884,7 @@ export function AdminDashboard({ onPreviewClientSite }: { onPreviewClientSite?: 
                                 {apt.service?.name}
                               </h4>
                               <span style={{ fontSize: '12px', color: '#7a6871' }}>
-                                Duração: {apt.service?.duration} min | Valor: <strong>R$ {apt.price.toFixed(2)}</strong>
+                                Duração: {apt.service?.duration} min | Valor: <strong>R$ {Number(apt.price).toFixed(2)}</strong>
                               </span>
                             </div>
                           </div>
@@ -1182,7 +1182,7 @@ export function AdminDashboard({ onPreviewClientSite }: { onPreviewClientSite?: 
                         </td>
                         <td style={{ padding: '14px 8px', fontWeight: 500 }}>{apt.service?.name}</td>
                         <td style={{ padding: '14px 8px', fontWeight: 700, color: '#351c2a' }}>
-                          R$ {apt.price.toFixed(2)}
+                          R$ {Number(apt.price).toFixed(2)}
                         </td>
                         <td style={{ padding: '14px 8px' }}>
                           <span

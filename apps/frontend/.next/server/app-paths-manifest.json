@@ -1,1 +1,15 @@
-{}
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/minha-agenda/page": "app/minha-agenda/page.js",
+  "/agendar/page": "app/agendar/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/cadastro/page": "app/cadastro/page.js",
+  "/clientes/page": "app/clientes/page.js",
+  "/page": "app/page.js",
+  "/login/page": "app/login/page.js",
+  "/privacidade/page": "app/privacidade/page.js",
+  "/perfil/page": "app/perfil/page.js",
+  "/status/page": "app/status/page.js",
+  "/servicos/page": "app/servicos/page.js",
+  "/termos/page": "app/termos/page.js"
+}

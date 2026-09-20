@@ -455,7 +455,7 @@ export default function MinhaAgendaPage() {
                         Valor
                       </span>
                       <p style={{ fontWeight: '600', fontSize: '16px' }}>
-                        R$ {apt.service.price.toFixed(2)}
+                        R$ {Number(apt.service.price).toFixed(2)}
                       </p>
                     </div>
                   </div>
