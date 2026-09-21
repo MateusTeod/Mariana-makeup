@@ -16,45 +16,54 @@ export class AdminService {
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0);
     const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
 
-    const dashboardQueriesPromise = Promise.all([
-      this.prisma.appointment.count({
+    const dashboardQueriesPromise: Promise<[
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      Awaited<ReturnType<PrismaService['appointment']['findMany']>>,
+    ]> = (async () => [
+      await this.prisma.appointment.count({
         where: {
           startAt: { gte: today, lt: tomorrow },
           status: { notIn: ['CANCELLED', 'NO_SHOW'] },
         },
       }),
-      this.prisma.appointment.count({
+      await this.prisma.appointment.count({
         where: {
           startAt: { gte: now },
           status: { notIn: ['CANCELLED', 'NO_SHOW'] },
         },
       }),
-      this.prisma.appointment.count({
+      await this.prisma.appointment.count({
         where: {
           startAt: { gte: monthStart, lte: monthEnd },
           status: { notIn: ['CANCELLED', 'NO_SHOW'] },
         },
       }),
-      this.prisma.appointment.count({
+      await this.prisma.appointment.count({
         where: {
           startAt: { gte: monthStart, lte: monthEnd },
           status: 'COMPLETED',
         },
       }),
-      this.prisma.appointment.count({
+      await this.prisma.appointment.count({
         where: {
           startAt: { gte: monthStart, lte: monthEnd },
           status: 'CANCELLED',
         },
       }),
-      this.prisma.user.count({
+      await this.prisma.user.count({
         where: {
           role: 'CLIENT',
           createdAt: { gte: monthStart, lte: monthEnd },
         },
       }),
-      this.prisma.user.count({ where: { role: 'CLIENT' } }),
-      this.prisma.appointment.findMany({
+      await this.prisma.user.count({ where: { role: 'CLIENT' } }),
+      await this.prisma.appointment.findMany({
         include: {
           service: true,
           customer: {
@@ -63,7 +72,7 @@ export class AdminService {
         },
         orderBy: { startAt: 'asc' },
       }),
-    ]);
+    ])();
 
     let dashboardQueries: Awaited<typeof dashboardQueriesPromise>;
     try {

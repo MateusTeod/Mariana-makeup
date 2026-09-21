@@ -13,26 +13,7 @@ export declare class AdminService {
         averageTicket: number;
         newClientsThisMonth: number;
         totalClients: number;
-        recentAppointments: ({
-            service: {
-                name: string;
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                description: string | null;
-                price: import("@prisma/client/runtime/library").Decimal;
-                duration: number;
-                image: string | null;
-                active: boolean;
-                slug: string;
-            };
-            customer: {
-                name: string | null;
-                email: string;
-                phone: string | null;
-                id: string;
-            };
-        } & {
+        recentAppointments: {
             status: import("@prisma/client").$Enums.AppointmentStatus;
             id: string;
             createdAt: Date;
@@ -43,27 +24,8 @@ export declare class AdminService {
             endAt: Date;
             customerId: string;
             notes: string | null;
-        })[];
-        allAppointments: ({
-            service: {
-                name: string;
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                description: string | null;
-                price: import("@prisma/client/runtime/library").Decimal;
-                duration: number;
-                image: string | null;
-                active: boolean;
-                slug: string;
-            };
-            customer: {
-                name: string | null;
-                email: string;
-                phone: string | null;
-                id: string;
-            };
-        } & {
+        }[];
+        allAppointments: {
             status: import("@prisma/client").$Enums.AppointmentStatus;
             id: string;
             createdAt: Date;
@@ -74,7 +36,7 @@ export declare class AdminService {
             endAt: Date;
             customerId: string;
             notes: string | null;
-        })[];
+        }[];
     }>;
     getCalendarIcs(): Promise<string>;
     getAgenda(startDate?: string, endDate?: string): Promise<({
