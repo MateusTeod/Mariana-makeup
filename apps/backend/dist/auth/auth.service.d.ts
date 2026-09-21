@@ -12,31 +12,31 @@ export declare class AuthService {
         accessToken: string;
         refreshToken: string;
         user: {
-            id: any;
-            email: any;
-            name: any;
-            phone: any;
-            role: any;
+            id: string;
+            email: string;
+            name: string | null;
+            phone: string | null;
+            role: import("@prisma/client").$Enums.Role;
         };
     }>;
     login(dto: LoginDto): Promise<{
         accessToken: string;
         refreshToken: string;
         user: {
-            id: any;
-            email: any;
-            name: any;
-            phone: any;
-            role: any;
+            id: string;
+            email: string;
+            name: string | null;
+            phone: string | null;
+            role: import("@prisma/client").$Enums.Role;
         };
     }>;
     refresh(refreshToken: string): Promise<{
         user: {
-            id: any;
-            email: any;
-            name: any;
-            phone: any;
-            role: any;
+            id: string;
+            email: string;
+            name: string | null;
+            phone: string | null;
+            role: import("@prisma/client").$Enums.Role;
         };
         accessToken: string;
         refreshToken: string;

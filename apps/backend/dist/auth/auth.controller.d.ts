@@ -10,21 +10,21 @@ export declare class AuthController {
     constructor(authService: AuthService, configService: ConfigService);
     register(dto: RegisterDto, res: Response): Promise<{
         user: {
-            id: any;
-            email: any;
-            name: any;
-            phone: any;
-            role: any;
+            id: string;
+            email: string;
+            name: string | null;
+            phone: string | null;
+            role: import("@prisma/client").$Enums.Role;
         };
         accessToken: string;
     }>;
     login(dto: LoginDto, res: Response): Promise<{
         user: {
-            id: any;
-            email: any;
-            name: any;
-            phone: any;
-            role: any;
+            id: string;
+            email: string;
+            name: string | null;
+            phone: string | null;
+            role: import("@prisma/client").$Enums.Role;
         };
         accessToken: string;
     }>;

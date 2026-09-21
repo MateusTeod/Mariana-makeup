@@ -8,13 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var AdminService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
-let AdminService = class AdminService {
+let AdminService = AdminService_1 = class AdminService {
     constructor(prisma) {
         this.prisma = prisma;
+        this.logger = new common_1.Logger(AdminService_1.name);
     }
     async getDashboard() {
         const today = new Date();
@@ -24,7 +26,7 @@ let AdminService = class AdminService {
         const now = new Date();
         const monthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0);
         const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
-        const [todayAppointments, upcomingAppointments, monthAppointments, completedThisMonth, cancelledThisMonth, newClientsThisMonth, totalClients, allAppointments,] = await Promise.all([
+        const dashboardQueriesPromise = Promise.all([
             this.prisma.appointment.count({
                 where: {
                     startAt: { gte: today, lt: tomorrow },
@@ -72,6 +74,15 @@ let AdminService = class AdminService {
                 orderBy: { startAt: 'asc' },
             }),
         ]);
+        let dashboardQueries;
+        try {
+            dashboardQueries = await dashboardQueriesPromise;
+        }
+        catch (error) {
+            this.logger.error('Failed to load admin dashboard', error instanceof Error ? error.stack : String(error));
+            throw error;
+        }
+        const [todayAppointments, upcomingAppointments, monthAppointments, completedThisMonth, cancelledThisMonth, newClientsThisMonth, totalClients, allAppointments,] = dashboardQueries;
         const monthAppointmentsList = allAppointments.filter((a) => new Date(a.startAt) >= monthStart &&
             new Date(a.startAt) <= monthEnd &&
             !['CANCELLED', 'NO_SHOW'].includes(a.status));
@@ -227,7 +238,7 @@ let AdminService = class AdminService {
     }
 };
 exports.AdminService = AdminService;
-exports.AdminService = AdminService = __decorate([
+exports.AdminService = AdminService = AdminService_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], AdminService);

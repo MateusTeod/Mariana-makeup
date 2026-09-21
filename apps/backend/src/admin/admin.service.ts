@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AdminService {
+  private readonly logger = new Logger(AdminService.name);
+
   constructor(private prisma: PrismaService) {}
 
   async getDashboard() {
@@ -14,16 +16,7 @@ export class AdminService {
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0);
     const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
 
-    const [
-      todayAppointments,
-      upcomingAppointments,
-      monthAppointments,
-      completedThisMonth,
-      cancelledThisMonth,
-      newClientsThisMonth,
-      totalClients,
-      allAppointments,
-    ] = await Promise.all([
+    const dashboardQueriesPromise = Promise.all([
       this.prisma.appointment.count({
         where: {
           startAt: { gte: today, lt: tomorrow },
@@ -71,6 +64,28 @@ export class AdminService {
         orderBy: { startAt: 'asc' },
       }),
     ]);
+
+    let dashboardQueries: Awaited<typeof dashboardQueriesPromise>;
+    try {
+      dashboardQueries = await dashboardQueriesPromise;
+    } catch (error) {
+      this.logger.error(
+        'Failed to load admin dashboard',
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw error;
+    }
+
+    const [
+      todayAppointments,
+      upcomingAppointments,
+      monthAppointments,
+      completedThisMonth,
+      cancelledThisMonth,
+      newClientsThisMonth,
+      totalClients,
+      allAppointments,
+    ] = dashboardQueries;
 
     const monthAppointmentsList = allAppointments.filter(
       (a) =>
