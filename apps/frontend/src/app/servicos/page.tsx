@@ -187,8 +187,8 @@ export default function ServicosPage() {
     }
     const numPrice = Number(formData.price);
     const numDuration = Number(formData.duration);
-    if (isNaN(numPrice) || numPrice <= 0) {
-      alert('Informe um preço válido maior que zero.');
+    if (isNaN(numPrice) || numPrice < 0) {
+      alert('Informe um preço válido maior ou igual a zero.');
       return;
     }
     if (isNaN(numDuration) || numDuration <= 0) {
@@ -878,7 +878,7 @@ export default function ServicosPage() {
                   <input
                     type="number"
                     required
-                    min={1}
+                    min={0}
                     step="0.50"
                     placeholder="Ex: 140"
                     value={formData.price}

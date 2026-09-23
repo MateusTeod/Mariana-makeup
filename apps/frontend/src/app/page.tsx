@@ -169,7 +169,7 @@ export default function HomePage() {
     {
       icon: 'sparkles' as const,
       title: 'Produtos de Elite',
-      text: 'Uso exclusivo de cosméticos internacionais de marcas consagradas como MAC, NARS, Dior e Charlotte Tilbury.',
+      text: 'Uso exclusivo de cosméticos de marcas consagradas como KRYOLAN, KOLL BEAUTY, ISDIN, CATHARINE HILL entre outras.',
     },
     {
       icon: 'heart' as const,
@@ -470,10 +470,13 @@ export default function HomePage() {
             <div className={styles['footer__contact']}>
               <h4 style={{ color: '#d6ae65', fontSize: '16px', marginBottom: '8px' }}>Atendimento</h4>
               <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '8px' }}>
-                Segunda a Sexta: 08:00 às 18:00
+                Segunda a Sexta: 07:00 às 18:00
               </p>
               <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '16px' }}>
-                Sábados: 08:00 às 14:00
+                Sábados: 06:00 às 18:00
+              </p>
+              <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '16px' }}>
+                Domingos: 08:00 às 13:00
               </p>
               <a
                 href={WHATSAPP_URL}

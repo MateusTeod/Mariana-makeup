@@ -11,6 +11,7 @@ import { AvailabilityModule } from './availability/availability.module';
 import { AdminModule } from './admin/admin.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { HealthModule } from './health/health.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { HealthModule } from './health/health.module';
     AvailabilityModule,
     AdminModule,
     NotificationsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

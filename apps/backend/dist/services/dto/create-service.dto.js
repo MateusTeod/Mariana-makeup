@@ -25,7 +25,7 @@ __decorate([
 ], CreateServiceDto.prototype, "description", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsPositive)(),
+    (0, class_validator_1.Min)(0),
     __metadata("design:type", Number)
 ], CreateServiceDto.prototype, "price", void 0);
 __decorate([

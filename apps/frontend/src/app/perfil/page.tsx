@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
 
 export default function PerfilPage() {
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading, logout, updateUser } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -72,6 +72,8 @@ export default function PerfilPage() {
         throw new Error('Erro ao atualizar perfil');
       }
 
+      const updatedUser = await response.json();
+      updateUser(updatedUser);
       setSuccess('Perfil atualizado com sucesso!');
       setEditMode(false);
     } catch (err) {

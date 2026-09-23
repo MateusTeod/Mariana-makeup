@@ -20,6 +20,7 @@ const availability_module_1 = require("./availability/availability.module");
 const admin_module_1 = require("./admin/admin.module");
 const notifications_module_1 = require("./notifications/notifications.module");
 const health_module_1 = require("./health/health.module");
+const users_module_1 = require("./users/users.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -46,6 +47,7 @@ exports.AppModule = AppModule = __decorate([
             availability_module_1.AvailabilityModule,
             admin_module_1.AdminModule,
             notifications_module_1.NotificationsModule,
+            users_module_1.UsersModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

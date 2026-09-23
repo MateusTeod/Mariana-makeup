@@ -18,6 +18,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string, phone?: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<void>;
+  updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,7 +29,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is logged in on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -38,11 +38,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Try to verify token by making an authenticated request
-        // For now, we'll parse JWT or make a simple request to verify
-        // Since we don't have a /auth/me endpoint, we'll just trust the token
         const payload = parseJwt(token);
         if (payload) {
+          if (payload.exp && payload.exp * 1000 <= Date.now() + 60 * 1000) {
+            const refreshResponse = await fetch(`${API_BASE}/auth/refresh`, {
+              method: 'POST',
+              credentials: 'include',
+            });
+            const refreshedData = refreshResponse.ok ? await refreshResponse.json() : null;
+            if (refreshedData?.accessToken) {
+              localStorage.setItem('accessToken', refreshedData.accessToken);
+              const refreshedPayload = parseJwt(refreshedData.accessToken);
+              if (refreshedPayload) {
+                setUser({
+                  id: refreshedPayload.sub,
+                  email: refreshedPayload.email,
+                  name: refreshedPayload.name || 'Usuário',
+                  role: refreshedPayload.role || 'CLIENT',
+                  phone: refreshedPayload.phone || null,
+                });
+                return;
+              }
+            }
+          }
           setUser({
             id: payload.sub,
             email: payload.email,
@@ -61,6 +79,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const renewSession = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/auth/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (data.accessToken) {
+          localStorage.setItem('accessToken', data.accessToken);
+        }
+      } catch {
+        // A transient network failure should not log the user out.
+      }
+    };
+
+    const interval = window.setInterval(renewSession, 10 * 60 * 1000);
+    window.addEventListener('focus', renewSession);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener('focus', renewSession);
+    };
+  }, [user]);
 
   const login = async (email: string, password: string) => {
     const response = await fetch(`${API_BASE}/auth/login`, {
@@ -168,8 +214,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateUser = (updates: Partial<User>) => {
+    setUser((currentUser) => currentUser ? { ...currentUser, ...updates } : currentUser);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, register, logout, refreshAuth }}>
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, register, logout, refreshAuth, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
