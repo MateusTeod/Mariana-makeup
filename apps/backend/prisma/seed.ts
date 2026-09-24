@@ -102,7 +102,7 @@ async function main() {
     { dayOfWeek: 4, startTime: '08:00', endTime: '18:00', active: true }, // Thursday
     { dayOfWeek: 5, startTime: '08:00', endTime: '18:00', active: true }, // Friday
     { dayOfWeek: 6, startTime: '06:00', endTime: '18:00', active: true }, // Saturday
-    { dayOfWeek: 7, startTime: '08:00', endTime: '13:00', active: true }, // Sunday 
+    { dayOfWeek: 0, startTime: '08:00', endTime: '13:00', active: true }, // Sunday
   ];
 
   for (const avail of availabilityData) {
