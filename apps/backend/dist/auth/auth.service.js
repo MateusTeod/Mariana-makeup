@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var AuthService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -15,11 +16,12 @@ const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const prisma_service_1 = require("../prisma/prisma.service");
 const argon2 = require("argon2");
-let AuthService = class AuthService {
+let AuthService = AuthService_1 = class AuthService {
     constructor(prisma, jwtService, configService) {
         this.prisma = prisma;
         this.jwtService = jwtService;
         this.configService = configService;
+        this.logger = new common_1.Logger(AuthService_1.name);
     }
     async register(dto) {
         const existingUser = await this.prisma.user.findUnique({
@@ -56,27 +58,36 @@ let AuthService = class AuthService {
         };
     }
     async login(dto) {
-        const user = await this.prisma.user.findUnique({
-            where: { email: dto.email },
-        });
-        if (!user || !user.password) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: { email: dto.email },
+            });
+            if (!user || !user.password) {
+                throw new common_1.UnauthorizedException('Invalid credentials');
+            }
+            const isPasswordValid = await argon2.verify(user.password, dto.password);
+            if (!isPasswordValid) {
+                throw new common_1.UnauthorizedException('Invalid credentials');
+            }
+            const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
+            return {
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    phone: user.phone,
+                    role: user.role,
+                },
+                ...tokens,
+            };
         }
-        const isPasswordValid = await argon2.verify(user.password, dto.password);
-        if (!isPasswordValid) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+        catch (error) {
+            if (error instanceof common_1.UnauthorizedException) {
+                throw error;
+            }
+            this.logger.error('Login failed while accessing the user account', error instanceof Error ? error.stack : undefined);
+            throw error;
         }
-        const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
-        return {
-            user: {
-                id: user.id,
-                email: user.email,
-                name: user.name,
-                phone: user.phone,
-                role: user.role,
-            },
-            ...tokens,
-        };
     }
     async refresh(refreshToken) {
         try {
@@ -121,7 +132,7 @@ let AuthService = class AuthService {
     }
 };
 exports.AuthService = AuthService;
-exports.AuthService = AuthService = __decorate([
+exports.AuthService = AuthService = AuthService_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         jwt_1.JwtService,

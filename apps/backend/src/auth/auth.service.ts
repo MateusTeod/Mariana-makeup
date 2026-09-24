@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
@@ -8,6 +8,8 @@ import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
@@ -55,32 +57,41 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const user = await this.prisma.user.findUnique({
-      where: { email: dto.email },
-    });
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { email: dto.email },
+      });
 
-    if (!user || !user.password) {
-      throw new UnauthorizedException('Invalid credentials');
+      if (!user || !user.password) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      const isPasswordValid = await argon2.verify(user.password, dto.password);
+
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
+
+      return {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          phone: user.phone,
+          role: user.role,
+        },
+        ...tokens,
+      };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+
+      this.logger.error('Login failed while accessing the user account', error instanceof Error ? error.stack : undefined);
+      throw error;
     }
-
-    const isPasswordValid = await argon2.verify(user.password, dto.password);
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
-
-    return {
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        phone: user.phone,
-        role: user.role,
-      },
-      ...tokens,
-    };
   }
 
   async refresh(refreshToken: string) {
