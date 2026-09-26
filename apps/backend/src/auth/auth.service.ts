@@ -63,13 +63,13 @@ export class AuthService {
       });
 
       if (!user || !user.password) {
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException('E-mail ou senha incorretos.');
       }
 
       const isPasswordValid = await argon2.verify(user.password, dto.password);
 
       if (!isPasswordValid) {
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException('E-mail ou senha incorretos.');
       }
 
       const tokens = await this.generateTokens(user.id, user.email, user.role, user.name, user.phone);
