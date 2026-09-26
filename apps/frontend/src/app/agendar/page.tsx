@@ -128,7 +128,7 @@ function AgendarContent() {
 
       const appointmentData = {
         serviceId: selectedService,
-        startAt: `${selectedDate}T${selectedTime}`,
+        startAt: `${selectedDate}T${selectedTime}:00-03:00`,
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formattedPhone,

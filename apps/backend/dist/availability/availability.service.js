@@ -23,9 +23,9 @@ let AvailabilityService = class AvailabilityService {
         if (!service || !service.active) {
             return [];
         }
-        const [year, month, day] = date.split('T')[0].split('-').map(Number);
-        const requestedDate = new Date(year, month - 1, day);
-        const dayOfWeek = requestedDate.getDay();
+        const dateString = date.split('T')[0];
+        const [year, month, day] = dateString.split('-').map(Number);
+        const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
         const availability = await this.prisma.availability.findFirst({
             where: {
                 dayOfWeek,
@@ -35,8 +35,8 @@ let AvailabilityService = class AvailabilityService {
         if (!availability) {
             return [];
         }
-        const dayStart = new Date(year, month - 1, day, 0, 0, 0, 0);
-        const dayEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
+        const dayStart = new Date(`${dateString}T00:00:00-03:00`);
+        const dayEnd = new Date(`${dateString}T23:59:59.999-03:00`);
         const isBlocked = await this.prisma.blockedTime.findFirst({
             where: {
                 startAt: { lte: dayEnd },
@@ -53,7 +53,7 @@ let AvailabilityService = class AvailabilityService {
                 status: { notIn: ['CANCELLED', 'NO_SHOW'] },
             },
         });
-        const slots = this.generateTimeSlots(availability.startTime, availability.endTime, service.duration, requestedDate, existingAppointments.map((a) => ({
+        const slots = this.generateTimeSlots(availability.startTime, availability.endTime, service.duration, dateString, existingAppointments.map((a) => ({
             startAt: a.startAt,
             endAt: a.endAt,
         })));
@@ -70,28 +70,27 @@ let AvailabilityService = class AvailabilityService {
     }
     generateTimeSlots(startTime, endTime, durationMinutes, date, existingAppointments) {
         const slots = [];
-        const [startHour, startMin] = startTime.split(':').map(Number);
-        const [endHour, endMin] = endTime.split(':').map(Number);
-        const current = new Date(date);
-        current.setHours(startHour, startMin, 0, 0);
-        const end = new Date(date);
-        end.setHours(endHour, endMin, 0, 0);
+        const current = new Date(`${date}T${startTime}:00-03:00`);
+        const end = new Date(`${date}T${endTime}:00-03:00`);
         const now = new Date();
         while (current.getTime() + durationMinutes * 60 * 1000 <= end.getTime()) {
             const slotEnd = new Date(current.getTime() + durationMinutes * 60 * 1000);
             if (current <= now) {
-                current.setMinutes(current.getMinutes() + 30);
+                current.setUTCMinutes(current.getUTCMinutes() + 30);
                 continue;
             }
             const isOccupied = existingAppointments.some((appt) => current < new Date(appt.endAt) && slotEnd > new Date(appt.startAt));
-            const hours = String(current.getHours()).padStart(2, '0');
-            const minutes = String(current.getMinutes()).padStart(2, '0');
-            const timeString = `${hours}:${minutes}`;
+            const timeString = new Intl.DateTimeFormat('en-GB', {
+                timeZone: 'America/Sao_Paulo',
+                hour: '2-digit',
+                minute: '2-digit',
+                hourCycle: 'h23',
+            }).format(current);
             slots.push({
                 time: timeString,
                 available: !isOccupied,
             });
-            current.setMinutes(current.getMinutes() + 30);
+            current.setUTCMinutes(current.getUTCMinutes() + 30);
         }
         return slots;
     }

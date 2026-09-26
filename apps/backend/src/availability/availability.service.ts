@@ -15,9 +15,9 @@ export class AvailabilityService {
     }
 
     // Parse date parts safely to avoid UTC midnight shifting backwards in UTC-3
-    const [year, month, day] = date.split('T')[0].split('-').map(Number);
-    const requestedDate = new Date(year, month - 1, day);
-    const dayOfWeek = requestedDate.getDay();
+    const dateString = date.split('T')[0];
+    const [year, month, day] = dateString.split('-').map(Number);
+    const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
 
     // Get working hours for this day
     const availability = await this.prisma.availability.findFirst({
@@ -31,8 +31,8 @@ export class AvailabilityService {
       return []; // Day off
     }
 
-    const dayStart = new Date(year, month - 1, day, 0, 0, 0, 0);
-    const dayEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
+    const dayStart = new Date(`${dateString}T00:00:00-03:00`);
+    const dayEnd = new Date(`${dateString}T23:59:59.999-03:00`);
 
     // Check if date is blocked
     const isBlocked = await this.prisma.blockedTime.findFirst({
@@ -59,7 +59,7 @@ export class AvailabilityService {
       availability.startTime,
       availability.endTime,
       service.duration,
-      requestedDate,
+      dateString,
       existingAppointments.map((a: any) => ({
         startAt: a.startAt,
         endAt: a.endAt,
@@ -84,18 +84,12 @@ export class AvailabilityService {
     startTime: string,
     endTime: string,
     durationMinutes: number,
-    date: Date,
+    date: string,
     existingAppointments: { startAt: Date; endAt: Date }[],
   ) {
     const slots: { time: string; available: boolean }[] = [];
-    const [startHour, startMin] = startTime.split(':').map(Number);
-    const [endHour, endMin] = endTime.split(':').map(Number);
-
-    const current = new Date(date);
-    current.setHours(startHour, startMin, 0, 0);
-
-    const end = new Date(date);
-    end.setHours(endHour, endMin, 0, 0);
+    const current = new Date(`${date}T${startTime}:00-03:00`);
+    const end = new Date(`${date}T${endTime}:00-03:00`);
 
     const now = new Date();
 
@@ -104,7 +98,7 @@ export class AvailabilityService {
 
       // Skip past slots
       if (current <= now) {
-        current.setMinutes(current.getMinutes() + 30);
+        current.setUTCMinutes(current.getUTCMinutes() + 30);
         continue;
       }
 
@@ -114,16 +108,19 @@ export class AvailabilityService {
       );
 
       // Format time as HH:mm
-      const hours = String(current.getHours()).padStart(2, '0');
-      const minutes = String(current.getMinutes()).padStart(2, '0');
-      const timeString = `${hours}:${minutes}`;
+      const timeString = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'America/Sao_Paulo',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+      }).format(current);
 
       slots.push({
         time: timeString,
         available: !isOccupied,
       });
 
-      current.setMinutes(current.getMinutes() + 30); // 30-min intervals
+      current.setUTCMinutes(current.getUTCMinutes() + 30); // 30-min intervals
     }
 
     return slots;
