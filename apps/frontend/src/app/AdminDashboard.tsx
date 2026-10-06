@@ -44,6 +44,32 @@ type DashboardData = {
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
+const STUDIO_TIME_ZONE = 'America/Sao_Paulo';
+
+function formatStudioDateKey(value: string): string {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: STUDIO_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date(value));
+  const part = (type: string) => parts.find((item) => item.type === type)?.value || '';
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
+
+function formatStudioTime(value: string): string {
+  return new Date(value).toLocaleTimeString('pt-BR', {
+    timeZone: STUDIO_TIME_ZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function formatStudioDate(value: string): string {
+  return new Date(value).toLocaleDateString('pt-BR', {
+    timeZone: STUDIO_TIME_ZONE,
+  });
+}
 
 function formatGoogleDate(isoString: string): string {
   const d = new Date(isoString);
@@ -227,7 +253,7 @@ export function AdminDashboard({ onPreviewClientSite }: { onPreviewClientSite?: 
     if (!data?.allAppointments) return map;
 
     for (const apt of data.allAppointments) {
-      const dateKey = apt.startAt.split('T')[0];
+      const dateKey = formatStudioDateKey(apt.startAt);
       if (!map.has(dateKey)) {
         map.set(dateKey, []);
       }
@@ -846,8 +872,8 @@ export function AdminDashboard({ onPreviewClientSite }: { onPreviewClientSite?: 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                   {selectedDateAppointments.map((apt) => {
                     const badge = statusBadge(apt.status);
-                    const startTime = new Date(apt.startAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                    const endTime = new Date(apt.endAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    const startTime = formatStudioTime(apt.startAt);
+                    const endTime = formatStudioTime(apt.endAt);
                     const cleanPhone = (apt.customer?.phone || '').replace(/\D/g, '');
 
                     return (
@@ -951,7 +977,7 @@ export function AdminDashboard({ onPreviewClientSite }: { onPreviewClientSite?: 
                             {cleanPhone && (
                               <a
                                 href={`https://wa.me/55${cleanPhone}?text=${encodeURIComponent(
-                                  `Olá, ${apt.customer?.name || 'tudo bem'}! Aqui é a Mariana Aparicio sobre o seu agendamento de ${apt.service?.name} marcado para ${new Date(apt.startAt).toLocaleDateString('pt-BR')} às ${startTime}.`
+                                  `Olá, ${apt.customer?.name || 'tudo bem'}! Aqui é a Mariana Aparicio sobre o seu agendamento de ${apt.service?.name} marcado para ${formatStudioDate(apt.startAt)} às ${startTime}.`
                                 )}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -1159,8 +1185,13 @@ export function AdminDashboard({ onPreviewClientSite }: { onPreviewClientSite?: 
                   filteredAppointments.map((apt) => {
                     const badge = statusBadge(apt.status);
                     const dt = new Date(apt.startAt);
-                    const dateFormatted = dt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    const timeFormatted = dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    const dateFormatted = dt.toLocaleDateString('pt-BR', {
+                      timeZone: STUDIO_TIME_ZONE,
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                    });
+                    const timeFormatted = formatStudioTime(apt.startAt);
 
                     return (
                       <tr

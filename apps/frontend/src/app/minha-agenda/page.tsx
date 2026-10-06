@@ -430,6 +430,7 @@ export default function MinhaAgendaPage() {
                       </span>
                       <p style={{ fontWeight: '600', fontSize: '16px' }}>
                         {startDate.toLocaleDateString('pt-BR', {
+                          timeZone: 'America/Sao_Paulo',
                           weekday: 'long',
                           year: 'numeric',
                           month: 'long',
@@ -444,6 +445,7 @@ export default function MinhaAgendaPage() {
                       </span>
                       <p style={{ fontWeight: '600', fontSize: '16px' }}>
                         {startDate.toLocaleTimeString('pt-BR', {
+                          timeZone: 'America/Sao_Paulo',
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
