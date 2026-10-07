@@ -11,6 +11,15 @@ type TimeSlot = { time: string; available: boolean };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
 
+function getSlotEndTime(startTime: string, durationMinutes: number): string {
+  const [hours, minutes] = startTime.split(':').map(Number);
+  const endMinutes = (hours * 60 + minutes + durationMinutes) % (24 * 60);
+  const endHours = Math.floor(endMinutes / 60);
+  const remainingMinutes = endMinutes % 60;
+
+  return `${String(endHours).padStart(2, '0')}:${String(remainingMinutes).padStart(2, '0')}`;
+}
+
 function AgendarContent() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
@@ -309,7 +318,7 @@ function AgendarContent() {
                           onClick={() => slot.available && setSelectedTime(slot.time)}
                           disabled={!slot.available}
                         >
-                          {slot.time}
+                          {slot.time} - {getSlotEndTime(slot.time, service?.duration || 0)}
                         </button>
                       ))}
                     </div>
