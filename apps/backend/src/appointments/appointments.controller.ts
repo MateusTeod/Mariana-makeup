@@ -27,6 +27,13 @@ export class AppointmentsController {
     return this.appointmentsService.create(dto, userId);
   }
 
+  @Post('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  createForClient(@Body() dto: CreateAppointmentDto) {
+    return this.appointmentsService.create(dto, undefined, true);
+  }
+
   @Get('me')
   @UseGuards(JwtAuthGuard)
   findMyAppointments(@Request() req: any) {

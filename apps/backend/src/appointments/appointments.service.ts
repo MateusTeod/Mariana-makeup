@@ -19,7 +19,11 @@ export class AppointmentsService {
     private notificationsService: NotificationsService,
   ) {}
 
-  async create(dto: CreateAppointmentDto, userId?: string) {
+  async create(
+    dto: CreateAppointmentDto,
+    userId?: string,
+    useCustomerDetails = false,
+  ) {
     const service = await this.prisma.service.findUnique({
       where: { id: dto.serviceId },
     });
@@ -44,22 +48,20 @@ export class AppointmentsService {
     // Create or find customer
     let customerId = userId;
 
-    if (!customerId) {
-      // Guest booking - create or find user by email
-      let user = await this.prisma.user.findUnique({
+    if (!customerId || useCustomerDetails) {
+      // Resolve the client by email for guest and admin bookings.
+      const user = await this.prisma.user.upsert({
         where: { email: dto.email },
+        update: useCustomerDetails
+          ? { name: dto.name, phone: dto.phone }
+          : {},
+        create: {
+          email: dto.email,
+          name: dto.name,
+          phone: dto.phone,
+          role: 'CLIENT',
+        },
       });
-
-      if (!user) {
-        user = await this.prisma.user.create({
-          data: {
-            email: dto.email,
-            name: dto.name,
-            phone: dto.phone,
-            role: 'CLIENT',
-          },
-        });
-      }
 
       customerId = user.id;
     }

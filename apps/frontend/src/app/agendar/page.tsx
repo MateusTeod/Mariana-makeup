@@ -57,7 +57,7 @@ function AgendarContent() {
 
   // Pre-fill user data if authenticated
   useEffect(() => {
-    if (user) {
+    if (user && user.role !== 'ADMIN') {
       setFormData((prev) => ({
         ...prev,
         name: prev.name || user.name || '',
@@ -135,7 +135,8 @@ function AgendarContent() {
         notes: formData.notes.trim(),
       };
 
-      const response = await fetch(`${API_BASE}/appointments`, {
+      const endpoint = user?.role === 'ADMIN' ? '/appointments/admin' : '/appointments';
+      const response = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +159,7 @@ function AgendarContent() {
       setSuccess(true);
       // Redirect after 2 seconds
       setTimeout(() => {
-        window.location.href = '/minha-agenda';
+        window.location.href = user?.role === 'ADMIN' ? '/admin' : '/minha-agenda';
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido ao agendar');
@@ -323,7 +324,7 @@ function AgendarContent() {
         {/* Step: Info */}
         {step === 'info' && (
           <div className="booking__content">
-            <h2>Seus Dados</h2>
+            <h2>{user?.role === 'ADMIN' ? 'Dados da Cliente' : 'Seus Dados'}</h2>
             {error && <div style={{ color: 'var(--color-danger)', marginBottom: '16px' }}>⚠️ {error}</div>}
             <form className="booking__form">
               <div className="form-group">

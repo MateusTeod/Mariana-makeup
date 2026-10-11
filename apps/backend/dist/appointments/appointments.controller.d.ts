@@ -34,6 +34,37 @@ export declare class AppointmentsController {
         customerId: string;
         notes: string | null;
     }>;
+    createForClient(dto: CreateAppointmentDto): Promise<{
+        service: {
+            name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            description: string | null;
+            price: import("@prisma/client/runtime/library").Decimal;
+            duration: number;
+            image: string | null;
+            active: boolean;
+            slug: string;
+        };
+        customer: {
+            name: string | null;
+            email: string;
+            phone: string | null;
+            id: string;
+        };
+    } & {
+        status: import("@prisma/client").$Enums.AppointmentStatus;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        price: import("@prisma/client/runtime/library").Decimal;
+        serviceId: string;
+        startAt: Date;
+        endAt: Date;
+        customerId: string;
+        notes: string | null;
+    }>;
     findMyAppointments(req: any): Promise<({
         service: {
             name: string;

@@ -20,7 +20,7 @@ let AppointmentsService = class AppointmentsService {
         this.availabilityService = availabilityService;
         this.notificationsService = notificationsService;
     }
-    async create(dto, userId) {
+    async create(dto, userId, useCustomerDetails = false) {
         const service = await this.prisma.service.findUnique({
             where: { id: dto.serviceId },
         });
@@ -34,20 +34,19 @@ let AppointmentsService = class AppointmentsService {
             throw new common_1.ConflictException('This time slot is no longer available');
         }
         let customerId = userId;
-        if (!customerId) {
-            let user = await this.prisma.user.findUnique({
+        if (!customerId || useCustomerDetails) {
+            const user = await this.prisma.user.upsert({
                 where: { email: dto.email },
+                update: useCustomerDetails
+                    ? { name: dto.name, phone: dto.phone }
+                    : {},
+                create: {
+                    email: dto.email,
+                    name: dto.name,
+                    phone: dto.phone,
+                    role: 'CLIENT',
+                },
             });
-            if (!user) {
-                user = await this.prisma.user.create({
-                    data: {
-                        email: dto.email,
-                        name: dto.name,
-                        phone: dto.phone,
-                        role: 'CLIENT',
-                    },
-                });
-            }
             customerId = user.id;
         }
         const appointment = await this.prisma.$transaction(async (tx) => {

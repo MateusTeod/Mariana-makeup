@@ -8,7 +8,7 @@ export declare class AppointmentsService {
     private availabilityService;
     private notificationsService;
     constructor(prisma: PrismaService, availabilityService: AvailabilityService, notificationsService: NotificationsService);
-    create(dto: CreateAppointmentDto, userId?: string): Promise<{
+    create(dto: CreateAppointmentDto, userId?: string, useCustomerDetails?: boolean): Promise<{
         service: {
             name: string;
             id: string;

@@ -27,6 +27,9 @@ let AppointmentsController = class AppointmentsController {
         const userId = req.user?.id;
         return this.appointmentsService.create(dto, userId);
     }
+    createForClient(dto) {
+        return this.appointmentsService.create(dto, undefined, true);
+    }
     findMyAppointments(req) {
         return this.appointmentsService.findByUser(req.user.id);
     }
@@ -59,6 +62,15 @@ __decorate([
     __metadata("design:paramtypes", [create_appointment_dto_1.CreateAppointmentDto, Object]),
     __metadata("design:returntype", void 0)
 ], AppointmentsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('admin'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('ADMIN'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_appointment_dto_1.CreateAppointmentDto]),
+    __metadata("design:returntype", void 0)
+], AppointmentsController.prototype, "createForClient", null);
 __decorate([
     (0, common_1.Get)('me'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
