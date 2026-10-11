@@ -11,6 +11,11 @@ type TimeSlot = { time: string; available: boolean };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/api/v1';
 
+function formatSelectedDate(date: string): string {
+  const [year, month, day] = date.split('-').map(Number);
+  return new Date(year, month - 1, day, 12).toLocaleDateString('pt-BR');
+}
+
 function AgendarContent() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
@@ -383,7 +388,7 @@ function AgendarContent() {
               </div>
               <div className="booking__summary-item">
                 <span>Data</span>
-                <strong>{new Date(selectedDate).toLocaleDateString('pt-BR')}</strong>
+                <strong>{formatSelectedDate(selectedDate)}</strong>
               </div>
               <div className="booking__summary-item">
                 <span>Horário</span>

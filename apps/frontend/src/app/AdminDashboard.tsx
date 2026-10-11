@@ -977,7 +977,12 @@ export function AdminDashboard({ onPreviewClientSite }: { onPreviewClientSite?: 
                             {cleanPhone && (
                               <a
                                 href={`https://wa.me/55${cleanPhone}?text=${encodeURIComponent(
-                                  `Olá, ${apt.customer?.name || 'tudo bem'}! Aqui é a Mariana Aparicio sobre o seu agendamento de ${apt.service?.name} marcado para ${formatStudioDate(apt.startAt)} às ${startTime}.`
+                                  `Olá, ${apt.customer?.name || 'tudo bem'}! Aqui é a Mariana Aparicio sobre o seu agendamento de ${apt.service?.name} marcado para ${formatStudioDate(apt.startAt)} às ${startTime}. Por gentileza, quando possível, entre em contato para combinarmos o pagamento do sinal e confirmarmos seu horário.
+
+                                  Agradeço pela preferência e fico à disposição para qualquer dúvida! 💖
+
+                                  Atenciosamente,
+                                  Mariana Aparicio`
                                 )}`}
                                 target="_blank"
                                 rel="noopener noreferrer"

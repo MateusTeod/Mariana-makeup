@@ -52,9 +52,7 @@ export class AppointmentsService {
       // Resolve the client by email for guest and admin bookings.
       const user = await this.prisma.user.upsert({
         where: { email: dto.email },
-        update: useCustomerDetails
-          ? { name: dto.name, phone: dto.phone }
-          : {},
+        update: {},
         create: {
           email: dto.email,
           name: dto.name,
@@ -62,6 +60,12 @@ export class AppointmentsService {
           role: 'CLIENT',
         },
       });
+
+      if (useCustomerDetails && user.role !== 'CLIENT') {
+        throw new BadRequestException(
+          'Use o e-mail da cliente, não o e-mail de uma conta administrativa',
+        );
+      }
 
       customerId = user.id;
     }

@@ -37,9 +37,7 @@ let AppointmentsService = class AppointmentsService {
         if (!customerId || useCustomerDetails) {
             const user = await this.prisma.user.upsert({
                 where: { email: dto.email },
-                update: useCustomerDetails
-                    ? { name: dto.name, phone: dto.phone }
-                    : {},
+                update: {},
                 create: {
                     email: dto.email,
                     name: dto.name,
@@ -47,6 +45,9 @@ let AppointmentsService = class AppointmentsService {
                     role: 'CLIENT',
                 },
             });
+            if (useCustomerDetails && user.role !== 'CLIENT') {
+                throw new common_1.BadRequestException('Use o e-mail da cliente, não o e-mail de uma conta administrativa');
+            }
             customerId = user.id;
         }
         const appointment = await this.prisma.$transaction(async (tx) => {
